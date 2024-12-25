@@ -1,6 +1,6 @@
-package com.wjp;
+package com.wjp.maker;
 
-import com.wjp.cli.CommandExecutor;
+import com.wjp.maker.cli.CommandExecutor;
 
 public class Main {
 

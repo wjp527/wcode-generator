@@ -1,4 +1,4 @@
-package com.wjp.model;
+package com.wjp.maker.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 静态模版配置
  */
 @Data
-public class MainTemplateConfig {
+public class DataModel {
 
     /**
      * 让我们先明确几个动态生成的需求

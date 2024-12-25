@@ -1,8 +1,8 @@
-package com.wjp.cli;
+package com.wjp.maker.cli;
 
-import com.wjp.cli.command.ConfigCommand;
-import com.wjp.cli.command.GenerateCommand;
-import com.wjp.cli.command.ListCommand;
+import com.wjp.maker.cli.command.ConfigCommand;
+import com.wjp.maker.cli.command.GenerateCommand;
+import com.wjp.maker.cli.command.ListCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 

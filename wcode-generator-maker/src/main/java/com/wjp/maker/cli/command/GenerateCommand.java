@@ -1,8 +1,8 @@
-package com.wjp.cli.command;
+package com.wjp.maker.cli.command;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.wjp.generator.MainGenerator;
-import com.wjp.model.MainTemplateConfig;
+import com.wjp.maker.generator.file.FileGenerator;
+import com.wjp.maker.model.DataModel;
 import freemarker.template.TemplateException;
 import lombok.Data;
 import picocli.CommandLine;
@@ -34,11 +34,11 @@ public class GenerateCommand implements Callable {
 
     @Override
     public Integer call() throws TemplateException, IOException {
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
+        DataModel dataModel = new DataModel();
         // 将 命令行参数 赋值给 mainTemplateConfig
-        BeanUtil.copyProperties(this, mainTemplateConfig);
+        BeanUtil.copyProperties(this, dataModel);
         // 生成代码
-        MainGenerator.doGenerate(mainTemplateConfig);
+        FileGenerator.doGenerate(dataModel);
         return 0;
     }
 

@@ -1,4 +1,4 @@
-package com.wjp.cli.command;
+package com.wjp.maker.cli.command;
 
 import cn.hutool.core.io.FileUtil;
 import picocli.CommandLine;

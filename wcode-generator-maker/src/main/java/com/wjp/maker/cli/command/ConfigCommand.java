@@ -1,7 +1,7 @@
-package com.wjp.cli.command;
+package com.wjp.maker.cli.command;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.wjp.model.MainTemplateConfig;
+import com.wjp.maker.model.DataModel;
 import picocli.CommandLine;
 
 import java.lang.reflect.Field;
@@ -16,7 +16,7 @@ public class ConfigCommand implements Runnable{
     @Override
     public void run() {
         // 获取 MainTemplateConfig.class 类的所有字段
-        Field[] fields = ReflectUtil.getFields(MainTemplateConfig.class);
+        Field[] fields = ReflectUtil.getFields(DataModel.class);
         for (Field field : fields) {
             System.out.println("字段名称" + field.getName());
             System.out.println("字段类型" + field.getType());

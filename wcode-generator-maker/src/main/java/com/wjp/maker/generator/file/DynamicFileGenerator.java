@@ -1,14 +1,18 @@
-package com.wjp.generator;
+package com.wjp.maker.generator.file;
 
-import com.wjp.model.MainTemplateConfig;
+import cn.hutool.core.io.FileUtil;
+import com.wjp.maker.model.DataModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import java.io.*;
 
+/**
+ * 动态文件生成器
+ */
 
-public class DynamicGenerator {
+public class DynamicFileGenerator {
     public static void main(String[] args) throws IOException, TemplateException {
 
         // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-maker 这个项目里
@@ -25,12 +29,12 @@ public class DynamicGenerator {
 
         // 创建数据模型
 
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
+        DataModel dataModel = new DataModel();
 //        mainTemplateConfig.setAuthor("wjp");
 //        mainTemplateConfig.setOutputText("sum");
-        mainTemplateConfig.setLoop(true);
+        dataModel.setLoop(true);
 
-        doGenerate(inputPath, outputPath, mainTemplateConfig);
+        doGenerate(inputPath, outputPath, dataModel);
     }
 
     public static void doGenerate(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
@@ -56,6 +60,13 @@ public class DynamicGenerator {
 
         // 加载模板文件
         Template template = configuration.getTemplate(templateName);
+
+        // 如果文件不存在，则创建
+        if(!FileUtil.exist(outputPath)) {
+            // touch:创建文件
+            // mkdir:创建目录
+            FileUtil.touch(outputPath);
+        }
 
         // 输出文件，确保文件使用 UTF-8 编码
         Writer out = new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8");

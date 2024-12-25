@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# 设置 Java 的文件编码为 UTF-8，确保 Java 程序能够正确处理中文
-java -Dfile.encoding=UTF-8 -jar target/wcode-generator-maker-1.0-SNAPSHOT-jar-with-dependencies.jar "$@"

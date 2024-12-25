@@ -1,21 +1,24 @@
-package com.wjp.generator;
+package com.wjp.maker.generator.file;
 
-import com.wjp.model.MainTemplateConfig;
+import com.wjp.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MainGenerator {
+/**
+ * 动态静态代码生成器
+ */
+public class FileGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
 
         // 创建数据模型
 
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("wjp");
-        mainTemplateConfig.setOutputText("sum");
-        mainTemplateConfig.setLoop(true);
-        doGenerate(mainTemplateConfig);
+        DataModel dataModel = new DataModel();
+        dataModel.setAuthor("wjp");
+        dataModel.setOutputText("sum");
+        dataModel.setLoop(true);
+        doGenerate(dataModel);
     }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
@@ -33,7 +36,7 @@ public class MainGenerator {
         String outputPath = projectPath;
 
         // 复制
-        StaticGenerator.copyFilesHuttol(inputPath, outputPath);
+        StaticFileGenerator.copyFilesHuttol(inputPath, outputPath);
 
         // 2. 生成动态文件
         // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-maker 这个项目里
@@ -44,6 +47,6 @@ public class MainGenerator {
         String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
 
 
-        DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
+        DynamicFileGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }
 }
