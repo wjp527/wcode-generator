@@ -8,6 +8,17 @@ import java.io.IOException;
 
 public class MainGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
+
+        // 创建数据模型
+
+        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
+        mainTemplateConfig.setAuthor("wjp");
+        mainTemplateConfig.setOutputText("sum");
+        mainTemplateConfig.setLoop(true);
+        doGenerate(mainTemplateConfig);
+    }
+
+    public static void doGenerate(Object model) throws TemplateException, IOException {
         // 1. 生成静态文件
         // 生成最外层的项目根目录: D:\fullStack\wcode-generator
         String projectPath = System.getProperty("user.dir");
@@ -30,16 +41,9 @@ public class MainGenerator {
         String dynamicInputPath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
 
         // 输出路径【动态模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-basic\MainTemplate.java
-        String dynamicOutputPath = projectPath + File.separator +"acm-template/src/com/yupi/acm/MainTemplate.java";
+        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
 
 
-        // 创建数据模型
-
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("wjp11");
-        mainTemplateConfig.setOutputText("sum11");
-        mainTemplateConfig.setLoop(true);
-
-        DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, mainTemplateConfig);
+        DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }
 }

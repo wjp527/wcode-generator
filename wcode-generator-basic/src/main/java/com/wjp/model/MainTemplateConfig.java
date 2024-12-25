@@ -30,6 +30,6 @@ public class MainTemplateConfig {
     /**
      * 是否循环(开关)
      */
-    private Boolean loop;
+    private boolean loop;
 
 }
