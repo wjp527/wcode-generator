@@ -16,7 +16,7 @@ public class ListCommand implements Runnable{
 
     @Override
     public void run() {
-        // 获取项目根目录: D:\fullStack\wcode-generator\wcode-generator-basic
+        // 获取项目根目录: D:\fullStack\wcode-generator\wcode-generator-maker
         String projectPath = System.getProperty("user.dir");
 
         // 获取整个项目的根目录 就是 D:\fullStack\wcode-generator

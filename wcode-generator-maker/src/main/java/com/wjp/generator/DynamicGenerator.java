@@ -11,15 +11,15 @@ import java.io.*;
 public class DynamicGenerator {
     public static void main(String[] args) throws IOException, TemplateException {
 
-        // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-basic 这个项目里
+        // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-maker 这个项目里
 
-        // 项目路径: D:\fullStack\wcode-generator\wcode-generator-basic
-        String projectPath = System.getProperty("user.dir") + File.separator + "wcode-generator-basic";
+        // 项目路径: D:\fullStack\wcode-generator\wcode-generator-maker
+        String projectPath = System.getProperty("user.dir") + File.separator + "wcode-generator-maker";
 
-        // 输入路径【模板文件路径】: D:\fullStack\wcode-generator\wcode-generator-basic\src/main/resources/templates/MainTemplate.java.ftl
+        // 输入路径【模板文件路径】: D:\fullStack\wcode-generator\wcode-generator-maker\src/main/resources/templates/MainTemplate.java.ftl
         String inputPath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
 
-        // 输出路径【模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-basic\MainTemplate.java
+        // 输出路径【模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-maker\MainTemplate.java
         String outputPath = projectPath + File.separator + "MainTemplate.java";
 
 

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wjp</groupId>
-    <artifactId>wcode-generator-basic</artifactId>
+    <artifactId>wcode-generator-maker</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 

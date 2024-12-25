@@ -36,11 +36,11 @@ public class MainGenerator {
         StaticGenerator.copyFilesHuttol(inputPath, outputPath);
 
         // 2. 生成动态文件
-        // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-basic 这个项目里
-        // 输入路径【动态模板文件路径】: D:\fullStack\wcode-generator\wcode-generator-basic\src/main/resources/templates/MainTemplate.java.ftl
+        // 这里是项目根目录: D:\fullStack\wcode-generator,而我们需要进入的是 wcode-generator-maker 这个项目里
+        // 输入路径【动态模板文件路径】: D:\fullStack\wcode-generator\wcode-generator-maker\src/main/resources/templates/MainTemplate.java.ftl
         String dynamicInputPath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
 
-        // 输出路径【动态模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-basic\MainTemplate.java
+        // 输出路径【动态模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-maker\MainTemplate.java
         String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
 
 
