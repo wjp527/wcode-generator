@@ -22,7 +22,7 @@ public class FileGenerator {
     }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
-        // 1. 生成静态文件
+        // ListCommand.java.ftl. 生成静态文件
         // 生成最外层的项目根目录: D:\fullStack\wcode-generator
         String projectPath = System.getProperty("user.dir");
 

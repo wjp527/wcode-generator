@@ -1,4 +1,4 @@
-package com.wjp.maker.cli.command;
+package ${basePackage}.cli.command;
 
 import cn.hutool.core.io.FileUtil;
 import picocli.CommandLine;
@@ -23,7 +23,7 @@ public class ListCommand implements Runnable{
         File parentFile = new File(projectPath).getParentFile();
 
         // 输入路径
-        String inputPath = new File(parentFile, "wcode-generator-demo-projects/acm-template").getAbsolutePath();
+        String inputPath = "${fileConfig.inputRootPath}";
 
         // 获取所有文件
         List<File> files = FileUtil.loopFiles(inputPath);

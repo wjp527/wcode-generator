@@ -1,8 +1,8 @@
-package com.wjp.maker.cli.command;
+package ${basePackage}.cli.command;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.wjp.maker.generator.file.FileGenerator;
-import com.wjp.maker.model.DataModel;
+import ${basePackage}.generator.MainGenerator;
+import ${basePackage}.model.DataModel;
 import freemarker.template.TemplateException;
 import lombok.Data;
 import picocli.CommandLine;
@@ -23,14 +23,11 @@ public class GenerateCommand implements Callable {
      * interactive: 是否交互式输入，如密码输入
      * echo: 是否输出输入内容，如密码输入
      */
-    @CommandLine.Option(names = {"-l", "--loop"}, description = "是否循环", arity = "0..1", interactive = true,echo = true)
-    private boolean loop;
 
-    @CommandLine.Option(names = {"-a", "--author"}, description = "作者信息", arity = "0..1", interactive = true,echo = true)
-    private String author;
-
-    @CommandLine.Option(names = {"-o", "--outputText"}, description = "输出文本", arity = "0..1", interactive = true,echo = true)
-    private String outputText;
+    <#list modelConfig.models as modelInfo>
+        @CommandLine.Option(names = {<#if modelInfo.abbr??>"-${modelInfo.abbr}",</#if>"--${modelInfo.fieldName}"}, arity="0..1",<#if modelInfo.description??>description="${modelInfo.description}",</#if>interactive=true, echo=true)
+        private ${modelInfo.type} ${modelInfo.fieldName} <#if modelInfo.defaultValue??>=${modelInfo.defaultValue?c}</#if>;
+    </#list>
 
     @Override
     public Integer call() throws TemplateException, IOException {
@@ -38,7 +35,7 @@ public class GenerateCommand implements Callable {
         // 将 命令行参数 赋值给 mainTemplateConfig
         BeanUtil.copyProperties(this, dataModel);
         // 生成代码
-        FileGenerator.doGenerate(dataModel);
+        MainGenerator.doGenerate(dataModel);
         return 0;
     }
 

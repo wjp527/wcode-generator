@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class MainGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
-
         // 创建数据模型
 
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
@@ -19,6 +18,7 @@ public class MainGenerator {
     }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
+
         // 1. 生成静态文件
         // 生成最外层的项目根目录: D:\fullStack\wcode-generator
         String projectPath = System.getProperty("user.dir");

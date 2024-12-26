@@ -1,6 +1,6 @@
-package com.wjp.maker;
+package ${basePackage};
 
-//import com.wjp.maker.cli.CommandExecutor;
+import ${basePackage}.cli.CommandExecutor;
 
 public class Main {
 
@@ -11,7 +11,7 @@ public class Main {
 //        args = new String[]{"config"};
         // 获取用户的文件列表
 //        args = new String[]{"list"};
-//        CommandExecutor commandExecutor = new CommandExecutor();
-//        commandExecutor.doExecute(args);
+        CommandExecutor commandExecutor = new CommandExecutor();
+        commandExecutor.doExecute(args);
     }
 }

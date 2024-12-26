@@ -1,8 +1,8 @@
-package com.wjp.maker.cli;
+package ${basePackage}.cli;
 
-import com.wjp.maker.cli.command.ConfigCommand;
-import com.wjp.maker.cli.command.GenerateCommand;
-import com.wjp.maker.cli.command.ListCommand;
+import ${basePackage}.cli.command.ConfigCommand;
+import ${basePackage}.cli.command.GenerateCommand;
+import ${basePackage}.cli.command.ListCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -11,7 +11,7 @@ import picocli.CommandLine.Command;
  */
 // 命令对象
 // 注解 @Command 定义命令对象，name 为命令名，mixinStandardHelpOptions 为是否混合标准帮助选项
-@Command(name = "wcode", mixinStandardHelpOptions = true)
+@Command(name = "${name}", mixinStandardHelpOptions = true)
 public class CommandExecutor implements Runnable {
 
     // 命令行对象
