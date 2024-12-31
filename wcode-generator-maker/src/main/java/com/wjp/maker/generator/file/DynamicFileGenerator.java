@@ -1,12 +1,15 @@
 package com.wjp.maker.generator.file;
 
 import cn.hutool.core.io.FileUtil;
+import com.wjp.maker.meta.Meta;
 import com.wjp.maker.model.DataModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 动态文件生成器
@@ -34,14 +37,22 @@ public class DynamicFileGenerator {
 //        mainTemplateConfig.setOutputText("sum");
         dataModel.setLoop(true);
 
-        doGenerate(inputPath, outputPath, dataModel);
+//        doGenerate(inputPath, outputPath, dataModel);
     }
 
+    /**
+     * 动态生成文件
+     * @param inputPath 模板文件路径
+     * @param outputPath 输出文件路径
+     * @param model 数据模型
+     * @throws IOException
+     * @throws TemplateException
+     */
     public static void doGenerate(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
         // 创建 FreeMarker 配置对象
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 
-        // 获取模板文件的父目录
+        // 获取模板文件所在的父目录
         File templateDir = new File(inputPath).getParentFile();
         System.out.println("Template directory: " + templateDir);
 

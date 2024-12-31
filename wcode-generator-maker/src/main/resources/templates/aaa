@@ -1,0 +1,51 @@
+/**
+ * 数据模型
+ */
+@Data
+public class DataModel {
+
+    /**
+     * 让我们先明确几个动态生成的需求
+     *
+     * 1. 在代码开头增加作者 `@Author` 注释 (`增加`代码)
+     * 2. 修改程序输出的信息提示 (`替换`代码)
+     * 3. 将循环读取输入 改为 单次读取 (`可选`代码)
+     */
+
+
+    /**
+     * 是否生成 .gitignore 文件
+     */
+    public boolean needGit = true;
+
+
+    /**
+     * 是否生成循环
+     */
+    public boolean loop = false;
+
+
+    /**
+     * 核心模板
+     */
+    public MainTemplate mainTemplate = new MainTemplate();
+
+    /**
+     * 用于生成核心模板
+     */
+    @Data
+    public static class MainTemplate {
+        /**
+         * 作者注释
+         */
+        public String author = "wjp";
+
+
+        /**
+         * 输出信息
+         */
+        public String outputText = "sum = ";
+
+    }
+
+}

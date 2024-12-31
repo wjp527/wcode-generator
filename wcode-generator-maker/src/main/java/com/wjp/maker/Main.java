@@ -2,9 +2,21 @@ package com.wjp.maker;
 
 //import com.wjp.maker.cli.CommandExecutor;
 
-public class Main {
+import com.wjp.maker.generator.main.GenerateTemplate;
+import com.wjp.maker.generator.main.MainGenerator;
+import freemarker.template.TemplateException;
 
-    public static void main(String[] args) {
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
+        // 创建数据模型
+        GenerateTemplate mainGenerator = new MainGenerator();
+        // 生成代码
+        mainGenerator.doGenerate();
+    }
+
+//    public static void main(String[] args) {
         // 根据用户输入的参数，调用对应的命令执行器
 //        args = new String[]{"generate", "-l", "-DataModel.java.ftl", "-o"};
         // 动态获取用户输入参数的参数类型
@@ -13,5 +25,5 @@ public class Main {
 //        args = new String[]{"list"};
 //        CommandExecutor commandExecutor = new CommandExecutor();
 //        commandExecutor.doExecute(args);
-    }
+//    }
 }

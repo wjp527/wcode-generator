@@ -47,6 +47,6 @@ public class FileGenerator {
         String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
 
 
-        DynamicFileGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
+//        DynamicFileGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }
 }

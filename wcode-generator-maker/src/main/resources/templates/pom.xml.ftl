@@ -6,7 +6,7 @@
 
     <groupId>${basePackage}</groupId>
     <artifactId>${name}</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${version}</version>
 
 
     <dependencies>

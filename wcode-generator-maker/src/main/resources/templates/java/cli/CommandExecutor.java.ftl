@@ -8,6 +8,7 @@ import picocli.CommandLine.Command;
 
 /**
  * 命令行执行器【详单与遥控器，实际执行子命令 - 命令对象】
+ * 命令行工具的核心入口，设计上是 命令对象（Invoker），负责初始化和执行子命令【也就是初始化command文件夹下的子命令对象】
  */
 // 命令对象
 // 注解 @Command 定义命令对象，name 为命令名，mixinStandardHelpOptions 为是否混合标准帮助选项

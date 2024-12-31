@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class DataModel {
 
+
     /**
      * 让我们先明确几个动态生成的需求
      *
@@ -31,5 +32,11 @@ public class DataModel {
      * 是否循环(开关)
      */
     private boolean loop;
+
+
+    /**
+     * 是否需要使用Git托管
+     */
+//    private String isGitInit = "0";
 
 }

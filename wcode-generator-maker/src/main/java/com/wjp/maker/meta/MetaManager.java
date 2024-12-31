@@ -1,7 +1,10 @@
 package com.wjp.maker.meta;
 
+
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
+
+
 
 /**
  * 配置文件管理器
@@ -12,7 +15,7 @@ public class MetaManager {
     private static volatile Meta meta;
 
     /**
-     * 双检锁单例模式
+     * ✨双检锁单例模式
      * 解决 单例模式在初始化代码出现重复执行多次的问题
      *
      * @return
@@ -24,18 +27,21 @@ public class MetaManager {
             synchronized (MetaManager.class) {
                 if (meta == null) {
                     meta = initMeta();
+
                 }
             }
         }
         return meta;
     }
 
+    // ✨读取配置文件【resource/meta.json】
     private static Meta initMeta() {
         // 读取配置文件【resource/meta.json】
         String metaJson = ResourceUtil.readUtf8Str("meta.json");
         // 反序列化为Meta对象
         Meta newMeta = JSONUtil.toBean(metaJson, Meta.class);
-        // todo 校验配置文件、处理默认值
+        // 校验配置文件、处理默认值
+        MetaValidator.doValidAndFill(newMeta);
         return newMeta;
     }
 

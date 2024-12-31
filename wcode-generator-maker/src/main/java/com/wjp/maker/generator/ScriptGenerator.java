@@ -40,8 +40,8 @@ public class ScriptGenerator {
                 throw new RuntimeException(e);
             }
 
-            // 生成bat文件
-            FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
+            // 生成执行文件
+            FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath);
         } else {
             // Windows 脚本
             //@echo off
