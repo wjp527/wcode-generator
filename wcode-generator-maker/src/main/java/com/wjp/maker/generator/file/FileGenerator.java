@@ -1,6 +1,5 @@
 package com.wjp.maker.generator.file;
 
-import com.wjp.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -10,16 +9,7 @@ import java.io.IOException;
  * 动态静态代码生成器
  */
 public class FileGenerator {
-    public static void main(String[] args) throws TemplateException, IOException {
 
-        // 创建数据模型
-
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("wjp");
-        dataModel.setOutputText("sum");
-        dataModel.setLoop(true);
-        doGenerate(dataModel);
-    }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
         // ListCommand.java.ftl. 生成静态文件

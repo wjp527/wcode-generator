@@ -1,15 +1,11 @@
 package com.wjp.maker.generator.file;
 
 import cn.hutool.core.io.FileUtil;
-import com.wjp.maker.meta.Meta;
-import com.wjp.maker.model.DataModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import java.io.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 动态文件生成器
@@ -30,14 +26,6 @@ public class DynamicFileGenerator {
         String outputPath = projectPath + File.separator + "MainTemplate.java";
 
 
-        // 创建数据模型
-
-        DataModel dataModel = new DataModel();
-//        mainTemplateConfig.setAuthor("wjp");
-//        mainTemplateConfig.setOutputText("sum");
-        dataModel.setLoop(true);
-
-//        doGenerate(inputPath, outputPath, dataModel);
     }
 
     /**

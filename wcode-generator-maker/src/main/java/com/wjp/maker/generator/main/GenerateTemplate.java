@@ -8,7 +8,6 @@ import com.wjp.maker.generator.ScriptGenerator;
 import com.wjp.maker.generator.file.DynamicFileGenerator;
 import com.wjp.maker.meta.Meta;
 import com.wjp.maker.meta.MetaManager;
-import com.wjp.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import java.io.IOException;
 public class GenerateTemplate {
     public void doGenerate() throws TemplateException, IOException, InterruptedException {
         Meta meta = MetaManager.getMetaObject();
-        DataModel model = new DataModel();
         System.out.println(meta.toString());
 
 
@@ -34,7 +32,7 @@ public class GenerateTemplate {
         String sourceCopyDestPath = copySource(meta, outputPath);
 
         // 2.生成代码
-        generateCode(meta, model, outputPath);
+        generateCode(meta, outputPath);
 
         // 3.构建jar包
         String jarPath = buildJar(outputPath, meta);
@@ -85,7 +83,7 @@ public class GenerateTemplate {
         return jarPath;
     }
 
-    protected void generateCode(Meta meta, DataModel model, String outputPath) throws IOException, TemplateException {
+    protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 获取resource目录
         ClassPathResource classPathResource = new ClassPathResource("");
         // 获取绝对路径
@@ -165,7 +163,7 @@ public class GenerateTemplate {
         // 动态生成 .gitignore
         inputFilePath = inputResourcePath + "templates/.gitignore.ftl";
         outputFilePath = outputPath + File.separator + ".gitignore";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, model);
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
 
         // 动态生成 README.md文档
