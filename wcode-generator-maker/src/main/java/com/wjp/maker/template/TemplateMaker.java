@@ -7,6 +7,10 @@ import cn.hutool.json.JSONUtil;
 import com.wjp.maker.meta.Meta;
 import com.wjp.maker.meta.enums.FileGenerateTypeEnum;
 import com.wjp.maker.meta.enums.FileTypeEnum;
+import com.wjp.maker.template.model.FileFilterConfig;
+import com.wjp.maker.template.model.TemplateMakerFileConfig;
+import com.wjp.maker.template.model.enums.FileFilterRangeEnum;
+import com.wjp.maker.template.model.enums.FileFilterRuleEnum;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -18,20 +22,20 @@ import java.util.stream.Collectors;
 /**
  * 模板制作工具
  */
-public class templateMaker {
+public class TemplateMaker {
 
     /**
      * 判断id是否存在，如果不存在，则生成id，如果存在，则直接返回id
      *
-     * @param newMeta           新的元数据对象
-     * @param originProjectPath 原始项目路径
-     * @param inputFilePathList 要进行挖坑的文件路径 【支持多选多个文件】
-     * @param modelInfo         模型信息
-     * @param searchStr         要搜索的字符串
-     * @param id                要生成的id
+     * @param newMeta                   新的元数据对象
+     * @param originProjectPath         原始项目路径
+     * @param templateMakerFileConfig 模板制作过滤器配置
+     * @param modelInfo                 模型信息
+     * @param searchStr                 要搜索的字符串
+     * @param id                        要生成的id
      * @return
      */
-    private static long makeTemplate(Meta newMeta, String originProjectPath, List<String> inputFilePathList, Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
+    private static long makeTemplate(Meta newMeta, String originProjectPath, TemplateMakerFileConfig templateMakerFileConfig, Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
         // 没有 id 则生成
         if (id == null) {
             // 生成雪花算法
@@ -69,31 +73,49 @@ public class templateMaker {
         // D:/fullStack/wcode-generator/wcode-generator-maker/.temp/1/springboot-init
         sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
 
-        List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>();
+
         // 循环变量，输入的文件 【支持多选多个文件】
         // inputFilePathList = [/src/main/java/com/yupi/springbootinit/common, /src/main/java/com/yupi/springbootinit/controller]
-        for (String inputFilePath : inputFilePathList) {
+
+        // 获取文件配置信息
+        List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigList = templateMakerFileConfig.getFiles();
+        List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>();
+        for (TemplateMakerFileConfig.FileInfoConfig fileInfoConfig : fileInfoConfigList) {
+            String inputFilePath = fileInfoConfig.getPath();
             // 获取文件输入路径【绝对路径】
             String inputFileAbsolutePath = sourceRootPath + File.separator + inputFilePath;
-
-            // 制作文件模版
-            if (FileUtil.isDirectory(inputFileAbsolutePath)) {
-                // 遍历目录
-                // 会得到该目录下的所有文件
-                List<File> files = FileUtil.loopFiles(inputFileAbsolutePath);
-                System.out.println("files = " + files);
-                for (File file : files) {
-                    // 制作文件模版
-                    Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(modelInfo, searchStr, sourceRootPath, file);
-                    newFileInfoList.add(fileInfo);
-                }
-            } else {
+            // ✨一定要传入绝对路径
+            // 得到过滤后的文件列表
+            List<File> files = FileFilter.doFilter(inputFileAbsolutePath, fileInfoConfig.getFileConfigList());
+            for (File file : files) {
                 // 制作文件模版
-                Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(modelInfo, searchStr, sourceRootPath, new File(inputFileAbsolutePath));
+                Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(modelInfo, searchStr, sourceRootPath, file);
                 newFileInfoList.add(fileInfo);
             }
 
         }
+
+
+        // 如果是文件组
+//        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = templateMakerFileConfig.getFileGroupConfig();
+
+//        if(fileGroupConfig != null) {
+//            String condition = fileGroupConfig.getCondition();
+//            String groupKey = fileGroupConfig.getGroupKey();
+//            String groupName = fileGroupConfig.getGroupName();
+
+//            Meta.FileConfig.FileInfo groupFileInfo = new Meta.FileConfig.FileInfo();
+//            groupFileInfo.setCondition(condition);
+//            groupFileInfo.setGroupKey(groupKey);
+//            groupFileInfo.setGroupName(groupName);
+//
+//            // 文件全部放到一个组内
+//            groupFileInfo.setFiles(newFileInfoList);
+//            newFileInfoList = new ArrayList<>();
+//            newFileInfoList.add(groupFileInfo);
+//
+//
+//        }
 
         // 三、生成配置文件
         String metaOutputPath = sourceRootPath + File.separator + "meta.json";
@@ -175,6 +197,7 @@ public class templateMaker {
 
         // 如果有这个模板文件，那就是之前创建过了，直接读取文件内容，并在此基础上进行挖坑
         if (FileUtil.exist(fileOutputAbsolutePath)) {
+            // fileOutputAbsolutePath: 带ftl后缀的文件路径
             fileContent = FileUtil.readUtf8String(fileOutputAbsolutePath);
         } else {
             // 读取文件内容【格式为UTF-8 格式的】
@@ -199,6 +222,7 @@ public class templateMaker {
             fileInfo.setOutputPath(fileInputPath);
             fileInfo.setGenerateType(FileGenerateTypeEnum.STATIC.getValue());
         } else {
+            fileInfo.setOutputPath(fileOutputPath);
             fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
             // 写入模板内容
             FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
@@ -239,7 +263,42 @@ public class templateMaker {
 //        // 在模板文件中找到这个字符串
 //        String searchStr = "MainTemplate";
 
-        long id = makeTemplate(meta, originProjectPath, inputFilePathList, modelInfo, searchStr, 1874438033919512576L);
+
+        // 文件过滤配置信息
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(fileInputPath1);
+
+        List<FileFilterConfig> fileFilterConfigList = new ArrayList<>();
+        // 过滤规则：文件名包含 Base
+        // 范围: 是 文件名
+        // 规则: 包含
+        // 值: Base
+        FileFilterConfig fileFilterConfig1 = FileFilterConfig.builder()
+                .range(FileFilterRangeEnum.FILE_NAME.getValue())
+                .rule(FileFilterRuleEnum.CONTAINS.getValue())
+                .value("Base").build();
+
+        fileFilterConfigList.add(fileFilterConfig1);
+        fileInfoConfig1.setFileConfigList(fileFilterConfigList);
+
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig2 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig2.setPath(fileInputPath2);
+
+        List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigList = Arrays.asList(fileInfoConfig1, fileInfoConfig2);
+        TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
+        templateMakerFileConfig.setFiles(fileInfoConfigList);
+
+
+
+        // 分组配置
+//        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = new TemplateMakerFileConfig.FileGroupConfig();
+//        fileGroupConfig.setCondition("outputText");
+//        fileGroupConfig.setGroupKey("test");
+//        fileGroupConfig.setGroupName("测试分组");
+//        templateMakerFileConfig.setFileGroupConfig(fileGroupConfig);
+
+
+        long id = makeTemplate(meta, originProjectPath, templateMakerFileConfig, modelInfo, searchStr, 1874438033919512576L);
         System.out.println("id = " + id);
     }
 
