@@ -1,5 +1,6 @@
 package com.wjp.maker.template;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,10 +15,9 @@ import com.wjp.maker.template.model.enums.FileFilterRuleEnum;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 模板制作工具
@@ -27,12 +27,12 @@ public class TemplateMaker {
     /**
      * 判断id是否存在，如果不存在，则生成id，如果存在，则直接返回id
      *
-     * @param newMeta                   新的元数据对象
-     * @param originProjectPath         原始项目路径
+     * @param newMeta                 新的元数据对象
+     * @param originProjectPath       原始项目路径
      * @param templateMakerFileConfig 模板制作过滤器配置
-     * @param modelInfo                 模型信息
-     * @param searchStr                 要搜索的字符串
-     * @param id                        要生成的id
+     * @param modelInfo               模型信息
+     * @param searchStr               要搜索的字符串
+     * @param id                      要生成的id
      * @return
      */
     private static long makeTemplate(Meta newMeta, String originProjectPath, TemplateMakerFileConfig templateMakerFileConfig, Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
@@ -74,8 +74,6 @@ public class TemplateMaker {
         sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
 
 
-        // 循环变量，输入的文件 【支持多选多个文件】
-        // inputFilePathList = [/src/main/java/com/yupi/springbootinit/common, /src/main/java/com/yupi/springbootinit/controller]
 
         // 获取文件配置信息
         List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigList = templateMakerFileConfig.getFiles();
@@ -97,25 +95,25 @@ public class TemplateMaker {
 
 
         // 如果是文件组
-//        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = templateMakerFileConfig.getFileGroupConfig();
+        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = templateMakerFileConfig.getFileGroupConfig();
 
-//        if(fileGroupConfig != null) {
-//            String condition = fileGroupConfig.getCondition();
-//            String groupKey = fileGroupConfig.getGroupKey();
-//            String groupName = fileGroupConfig.getGroupName();
+        if (fileGroupConfig != null) {
+            String condition = fileGroupConfig.getCondition();
+            String groupKey = fileGroupConfig.getGroupKey();
+            String groupName = fileGroupConfig.getGroupName();
 
-//            Meta.FileConfig.FileInfo groupFileInfo = new Meta.FileConfig.FileInfo();
-//            groupFileInfo.setCondition(condition);
-//            groupFileInfo.setGroupKey(groupKey);
-//            groupFileInfo.setGroupName(groupName);
-//
-//            // 文件全部放到一个组内
-//            groupFileInfo.setFiles(newFileInfoList);
-//            newFileInfoList = new ArrayList<>();
-//            newFileInfoList.add(groupFileInfo);
-//
-//
-//        }
+            // 组里面的每一个对象信息
+            Meta.FileConfig.FileInfo groupFileInfo = new Meta.FileConfig.FileInfo();
+            groupFileInfo.setCondition(condition);
+            groupFileInfo.setGroupKey(groupKey);
+            groupFileInfo.setGroupName(groupName);
+
+            // 文件全部放到一个组内
+            groupFileInfo.setFiles(newFileInfoList);
+            newFileInfoList = new ArrayList<>();
+            newFileInfoList.add(groupFileInfo);
+
+        }
 
         // 三、生成配置文件
         String metaOutputPath = sourceRootPath + File.separator + "meta.json";
@@ -123,23 +121,21 @@ public class TemplateMaker {
         // 如果有这个mate.json文件，那就说明这不是第一次创建，所以是可以在之前的文件中进行累加操作的
         if (FileUtil.exist(metaOutputPath)) {
             // 字符串 转为 json 对象
-            Meta oldMeta = JSONUtil.toBean(FileUtil.readUtf8String(metaOutputPath), Meta.class);
+            newMeta = JSONUtil.toBean(FileUtil.readUtf8String(metaOutputPath), Meta.class);
             // 1. 追加配置参数
-            List<Meta.FileConfig.FileInfo> fileInfoList = oldMeta.getFileConfig().getFiles();
+            List<Meta.FileConfig.FileInfo> fileInfoList = newMeta.getFileConfig().getFiles();
             // 多个文件进行追加到一起【fileConfig.files】
             fileInfoList.addAll(newFileInfoList);
             // 2.追加模型参数
-            List<Meta.ModelConfig.ModelInfo> modelInfoList = oldMeta.getModelConfig().getModels();
+            List<Meta.ModelConfig.ModelInfo> modelInfoList = newMeta.getModelConfig().getModels();
             modelInfoList.add(modelInfo);
 
             // 配置去重
             // 文件去重
-            oldMeta.getFileConfig().setFiles(distinctFiles(fileInfoList));
+            newMeta.getFileConfig().setFiles(distinctFiles(fileInfoList));
             // 模型去重
-            oldMeta.getModelConfig().setModels(distinctModels(modelInfoList));
+            newMeta.getModelConfig().setModels(distinctModels(modelInfoList));
 
-            // 3. 写入新的meta.json文件
-            FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(oldMeta), metaOutputPath);
         } else {
             // 创建文件的配置对象
             Meta.FileConfig fileConfig = new Meta.FileConfig();
@@ -160,9 +156,10 @@ public class TemplateMaker {
             modelInfoList.add(modelInfo);
 
 
-            // 2. 将配置对象转为json格式输出
-            FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutputPath);
         }
+
+        // 3. 写入新的meta.json文件
+        FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutputPath);
 
         return id;
     }
@@ -245,7 +242,7 @@ public class TemplateMaker {
         String originProjectPath = FileUtil.getAbsolutePath(new File(projectPath).getParentFile()) + File.separator + "wcode-generator-demo-projects/springboot-init";
         // 要挖坑的文件位置
         String fileInputPath1 = "/src/main/java/com/yupi/springbootinit/common";
-        String fileInputPath2 = "/src/main/java/com/yupi/springbootinit/controller";
+        String fileInputPath2 = "/src/main/java/com/yupi/springbootinit/constant";
         List<String> inputFilePathList = Arrays.asList(fileInputPath1, fileInputPath2);
         // 3.输入模型参数信息【要进行挖坑的地方】
         Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
@@ -289,13 +286,12 @@ public class TemplateMaker {
         templateMakerFileConfig.setFiles(fileInfoConfigList);
 
 
-
         // 分组配置
-//        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = new TemplateMakerFileConfig.FileGroupConfig();
-//        fileGroupConfig.setCondition("outputText");
-//        fileGroupConfig.setGroupKey("test");
-//        fileGroupConfig.setGroupName("测试分组");
-//        templateMakerFileConfig.setFileGroupConfig(fileGroupConfig);
+        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = new TemplateMakerFileConfig.FileGroupConfig();
+        fileGroupConfig.setCondition("outputText");
+        fileGroupConfig.setGroupKey("test3");
+        fileGroupConfig.setGroupName("测试分组");
+        templateMakerFileConfig.setFileGroupConfig(fileGroupConfig);
 
 
         long id = makeTemplate(meta, originProjectPath, templateMakerFileConfig, modelInfo, searchStr, 1874438033919512576L);
@@ -309,14 +305,80 @@ public class TemplateMaker {
      * @return
      */
     private static List<Meta.FileConfig.FileInfo> distinctFiles(List<Meta.FileConfig.FileInfo> fileInfoList) {
-        // 去重
+
+        // 1. 将所有分组配置 (fileInfo) 分为有分组 和 无分组的
+
+
+        // 先处理有分组的文件
+        Map<String, List<Meta.FileConfig.FileInfo>> groupKeyFileInfoListMap = fileInfoList.stream()
+                // { "groupKey": "a", "files": [1,2]},{ "groupKey": "a", "files": [2,3]},{ "groupKey": "b", "files": [3,4]}
+                .filter(fileInfo -> StrUtil.isNotBlank(fileInfo.getGroupKey()))
+                // 目的: 将同组的文件合并到一起
+                // { "groupKey": "a", "files: [[1,2], [2,3]]},{ "groupKey": "b", "files: [[3,4]]}
+                .collect(
+                        // 快速分组
+                        Collectors.groupingBy(fileInfo -> fileInfo.getGroupKey())
+                );
+
+
+        // 2. 队友有分组的文件配置，如果有相同的分组，同分组的文件会进行合并(merge)，不同分组课同时保留
+
+        // 同组内进配置合并
+        // { "groupKey": "a", "files: [[ 1, 2 ], [ 2, 3 ]]}
+        // { "groupKey": "a", "files: [ 1, 2, 2, 3 ]}
+        // { "groupKey": "a", "files: [ 1, 2, 3 ]}
+
+        // 合并后的对象 map
+        Map<String, Meta.FileConfig.FileInfo> groupKeyMergedFileInfoMap = new HashMap<>();
+
+        // entrySet: 常用于遍历 Map 中的所有键值对
+        // groupKeyFileInfoListMap 理解为: { "groupKey": "a", "files: [[ 1, 2 ], [ 2, 3 ]]}
+        for (Map.Entry<String, List<Meta.FileConfig.FileInfo>> entry : groupKeyFileInfoListMap.entrySet()) {
+            // 所有的文件列表 = [[1,2], [2,3]]
+            // tempFileInfoList 理解为: [[ 1, 2 ], [ 2, 3 ]]
+            List<Meta.FileConfig.FileInfo> tempFileInfoList = entry.getValue();
+            // newFileInfoList 理解为: [1,2,3]
+            List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>(tempFileInfoList.stream()
+                    // 打平/扁平化 [[1,2],[2,3]] =>  [1,2,3]
+                    // flatMap: 将一个对象 转为 多个对象
+                    // Map: 一个对象 映射为 1个对象
+                    .flatMap(fileInfo -> fileInfo.getFiles().stream())
+                    .collect(
+                            // 按照输入路径进行去重
+                            Collectors.toMap(Meta.FileConfig.FileInfo::getInputPath, o -> o, (e, r) -> r)
+
+                    ).values());
+
+            // 同组配置信息的覆盖
+            // 取最后一个文件配置信息
+            Meta.FileConfig.FileInfo newFileInfo = CollUtil.getLast(tempFileInfoList);
+            newFileInfo.setFiles(newFileInfoList);
+            String groupKey = entry.getKey();
+            groupKeyMergedFileInfoMap.put(groupKey, newFileInfo);
+
+        }
+
+
+
+
+
+        // 3. 创建新的文件配置列表(结果列表)，先将 合并后的分组 添加到结果列表
+        ArrayList<Meta.FileConfig.FileInfo> resultList = new ArrayList<>(groupKeyMergedFileInfoMap.values());
+
+        // 4. 再将 无分组的文件 配置列表添加到结果列表
+        // 没有分组 去重
         ArrayList<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>(fileInfoList.stream()
+                // 没分组
+                .filter(fileInfo -> StrUtil.isBlank(fileInfo.getGroupKey()))
                 .collect(
                         // 按照输入路径去重
                         Collectors.toMap(Meta.FileConfig.FileInfo::getInputPath, o -> o, (e, r) -> r)
                 ).values());
 
-        return newFileInfoList;
+
+        resultList.addAll(newFileInfoList);
+
+        return resultList;
     }
 
     /**

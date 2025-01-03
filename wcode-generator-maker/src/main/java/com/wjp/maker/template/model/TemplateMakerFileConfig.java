@@ -43,18 +43,21 @@ public class TemplateMakerFileConfig {
     //  ],
     //}
 
-//    // 文件分组配置
-//    private FileGroupConfig fileGroupConfig;
-//
-//    @Data
-//    public static class FileGroupConfig {
-//        // 条件【用于判断单个文件、多个文件是否需要生成】
-//        private String condition;
-//        // 分组id
-//        private String groupKey;
-//        // 分组名称
-//        private String groupName;
-//    }
+    // 文件分组配置
+    private FileGroupConfig fileGroupConfig;
+
+    /**
+     * 文件分组配置
+     */
+    @Data
+    public static class FileGroupConfig {
+        // 条件【用于判断单个文件、多个文件是否需要生成】
+        private String condition;
+        // 分组id
+        private String groupKey;
+        // 分组名称
+        private String groupName;
+    }
 
 
 }
