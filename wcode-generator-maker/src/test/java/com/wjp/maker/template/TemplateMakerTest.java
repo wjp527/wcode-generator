@@ -1,8 +1,11 @@
 package com.wjp.maker.template;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.json.JSONUtil;
 import com.wjp.maker.meta.Meta;
 import com.wjp.maker.template.model.FileFilterConfig;
+import com.wjp.maker.template.model.TemplateMakerConfig;
 import com.wjp.maker.template.model.TemplateMakerFileConfig;
 import com.wjp.maker.template.model.TemplateMakerModelConfig;
 import com.wjp.maker.template.model.enums.FileFilterRangeEnum;
@@ -120,5 +123,13 @@ public class TemplateMakerTest {
         System.out.println("id = " + id);
     }
 
+
+    @Test
+    public void testMakerTemplateWithJSON() {
+        String configStr = ResourceUtil.readUtf8Str("templateMaker.json");
+        TemplateMakerConfig templateMakerConfig = JSONUtil.toBean(configStr, TemplateMakerConfig.class);
+        long id = TemplateMaker.makeTemplate(templateMakerConfig);
+        System.out.println("id = " + id);
+    }
 
 }

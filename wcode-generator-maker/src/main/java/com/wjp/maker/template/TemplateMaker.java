@@ -10,6 +10,7 @@ import com.wjp.maker.meta.Meta;
 import com.wjp.maker.meta.enums.FileGenerateTypeEnum;
 import com.wjp.maker.meta.enums.FileTypeEnum;
 import com.wjp.maker.template.model.FileFilterConfig;
+import com.wjp.maker.template.model.TemplateMakerConfig;
 import com.wjp.maker.template.model.TemplateMakerFileConfig;
 import com.wjp.maker.template.model.TemplateMakerModelConfig;
 import com.wjp.maker.template.model.enums.FileFilterRangeEnum;
@@ -24,6 +25,21 @@ import java.util.stream.Collectors;
  * 模板制作工具
  */
 public class TemplateMaker {
+    /**
+     * 制作模板
+     * @param templateMakerConfig
+     * @return
+     */
+    public static long makeTemplate(TemplateMakerConfig templateMakerConfig) {
+        Long id = templateMakerConfig.getId();
+        Meta newMeta = templateMakerConfig.getNewMeta();
+        String originProjectPath = templateMakerConfig.getOriginProjectPath();
+        TemplateMakerFileConfig templateMakerFileConfig = templateMakerConfig.getFileConfig();
+        TemplateMakerModelConfig templateMakerModelConfig = templateMakerConfig.getModelConfig();
+
+        return makeTemplate(newMeta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, id);
+    }
+
 
     /**
      * 判断id是否存在，如果不存在，则生成id，如果存在，则直接返回id
