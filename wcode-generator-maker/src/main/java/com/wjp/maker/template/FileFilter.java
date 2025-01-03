@@ -28,6 +28,7 @@ public class FileFilter {
         // 获取文件内容
         String fileContent = FileUtil.readUtf8String(file);
 
+        System.out.println("fileFilterConfigList = " + fileFilterConfigList);
         // 所有过滤器校验结束后返回的结果
         boolean result = true;
 
@@ -44,6 +45,9 @@ public class FileFilter {
             // 过滤值
             String value = fileFilterConfig.getValue();
 
+            System.out.println("range = "+range);
+            System.out.println("rule = "+rule);
+            System.out.println("value = "+value);
             // 过滤范围枚举
             // fileFilterRangeEnum = FILE_NAME
             FileFilterRangeEnum fileFilterRangeEnum = FileFilterRangeEnum.getEnumByValue(range);
@@ -116,6 +120,8 @@ public class FileFilter {
      * @return
      */
     public static List<File> doFilter(String filePath, List<FileFilterConfig> fileFilterConfigList) {
+
+        filePath = filePath.replace("\\", "/");
         System.out.println("filePath++ " + filePath);
         // 根据路径获取所有文件，并且过滤掉该目录下的所有文件
         List<File> fileList = FileUtil.loopFiles(filePath);
@@ -127,6 +133,8 @@ public class FileFilter {
                 .filter(file -> doSingleFileFilter(fileFilterConfigList, file))
                 .collect(Collectors.toList());
 
+
+        System.out.println("collect = " + collect);
         // 返回过滤后的文件列表
         return collect;
 

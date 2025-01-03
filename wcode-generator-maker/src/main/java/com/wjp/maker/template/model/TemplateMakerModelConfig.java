@@ -66,6 +66,10 @@ public class TemplateMakerModelConfig {
         private String groupKey;
         // 分组名称
         private String groupName;
+
+        private String type;
+
+        private String description;
     }
 
 

@@ -13,7 +13,7 @@ public class TemplateMakerConfig {
     /**
      * 新的元数据对象
      */
-    private Meta newMeta = new Meta();
+    private Meta meta = new Meta();
 
     /**
      * 原始项目路径
@@ -29,4 +29,6 @@ public class TemplateMakerConfig {
      * 模型信息 + 要搜索的字符串
      */
     private TemplateMakerModelConfig modelConfig = new TemplateMakerModelConfig();
+
+    private TemplateMakerOutputConfig outputConfig = new TemplateMakerOutputConfig();
 }

@@ -18,8 +18,10 @@ public class TemplateMakerFileConfig {
     public static class FileInfoConfig {
         // 文件（目录）路径【绝对路径】
         private String path;
+        // 控制文件是否生成【true：生成，false：不生成】
+        private String condition;
         // 过滤条件
-        private List<FileFilterConfig> fileConfigList;
+        private List<FileFilterConfig> filterConfigList;
     }
 
     //{

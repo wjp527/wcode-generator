@@ -8,6 +8,7 @@ import com.wjp.maker.meta.enums.FileGenerateTypeEnum;
 import com.wjp.maker.meta.enums.FileTypeEnum;
 import com.wjp.maker.meta.enums.ModelTypeEnum;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,7 +79,7 @@ public class MetaValidator {
             throw new MetaException("sourceRootPath不能为空");
         }
 
-        String defaultInputRootPath = ".source" + FileUtil.getLastPathEle(Paths.get(sourceRootPath)).getFileName().toString();
+        String defaultInputRootPath = ".source/" + FileUtil.getLastPathEle(Paths.get(sourceRootPath)).getFileName().toString();
         String inputRootPath = StrUtil.blankToDefault(fileConfig.getInputRootPath(), defaultInputRootPath);
         fileConfig.setInputRootPath(inputRootPath);
 
