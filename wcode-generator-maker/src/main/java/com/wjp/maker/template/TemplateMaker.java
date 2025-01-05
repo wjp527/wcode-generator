@@ -110,7 +110,7 @@ public class TemplateMaker {
         // 二、生成文件模板
         // 制作文件模板
         List<Meta.FileConfig.FileInfo> newFileInfoList = makeFileTemplates(templateMakerFileConfig, templateMakerModelConfig, sourceRootPath);
-        // 处理模型信息
+        // 获取模型信息
         List<Meta.ModelConfig.ModelInfo> newModelInfoList = getModelInfoList(templateMakerModelConfig);
 
         // 三、生成配置文件
@@ -174,6 +174,7 @@ public class TemplateMaker {
 
     /**
      * 获取模型配置
+     * 我觉得他就是对模型有分组的用list集合整合在一起，没有的直接抛出，不用list整合
      *
      * @param templateMakerModelConfig
      * @return
@@ -191,6 +192,7 @@ public class TemplateMaker {
         if (CollUtil.isEmpty(models)) {
             return newModelInfoList;
         }
+
 
         List<Meta.ModelConfig.ModelInfo> inputModelInfoList = models.stream()
                 .map(modelInfoConfig -> {

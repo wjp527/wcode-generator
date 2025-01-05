@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "fileConfig": {
+    "files": [
+      {
+        "path": "src/main/resources/application.yml",
+        "condition": "needMySQL"
+      }
+    ]
+  },
+  "modelConfig": {
+    "models": [
+      {
+        "fieldName": "needMySQL",
+        "type": "boolean",
+        "description": "是否开启数据库配置",
+        "defaultValue": true
+      }
+    ]
+  }
+}

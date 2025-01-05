@@ -51,7 +51,9 @@ public class GenerateCommand implements Callable {
                 <@generateOption indent="        " modelInfo=subModelInfo />
             </#list>
 
-
+            /**
+             * 执行子命令，并且把控制台输入的数据进行复制
+             */
             @Override
             public void run() {
                 // 将命令行参数 赋值给 mainTemplateConfig
@@ -67,6 +69,13 @@ public class GenerateCommand implements Callable {
         </#if>
     </#list>
 
+    /**
+     * 整个命令执行的入口
+     *
+     * @return
+     * @throws TemplateException
+     * @throws IOException
+     */
     @Override
     public Integer call() throws TemplateException, IOException {
 

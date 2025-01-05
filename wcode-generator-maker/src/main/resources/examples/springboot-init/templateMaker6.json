@@ -3,7 +3,8 @@
   "fileConfig": {
     "files": [
       {
-        "path": "src/main/resources/application.yml"
+        "path": "src/main/resources/application.yml",
+        "condition": "needMySQL"
       }
     ]
   },
@@ -12,7 +13,8 @@
       "groupKey": "mysqlConfig",
       "groupName": "MySQL数据库配置",
       "type": "MysqlConfig",
-      "description": "用于生成MySQL数据库配置"
+      "description": "用于生成MySQL数据库配置",
+      "condition": "needMySQL"
     },
     "models": [
       {
