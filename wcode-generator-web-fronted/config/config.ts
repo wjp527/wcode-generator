@@ -73,7 +73,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: '鱼皮前端万用模板',
+  title: 'wcoder 代码生成',
   layout: {
     locale: true,
     ...defaultSettings,
@@ -91,10 +91,10 @@ export default defineConfig({
    * @name 国际化插件
    * @doc https://umijs.org/docs/max/i18n
    */ /**
-   * @name antd 插件
-   * @description 内置了 babel import 插件
-   * @doc https://umijs.org/docs/max/antd#antd
-   */
+* @name antd 插件
+* @description 内置了 babel import 插件
+* @doc https://umijs.org/docs/max/antd#antd
+*/
   antd: {},
   /**
    * @name 网络请求配置
@@ -129,7 +129,7 @@ export default defineConfig({
   openAPI: [
     {
       requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: 'http://localhost:8101/api/v2/api-docs',
+      schemaPath: 'http://localhost:8120/api/v2/api-docs',
       projectName: 'backend',
     },
   ],

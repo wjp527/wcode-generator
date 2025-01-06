@@ -3,10 +3,9 @@ import { userLoginUsingPost } from '@/services/backend/userController';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { Helmet, history, useModel } from '@umijs/max';
+import { Helmet, history, useModel, Link} from '@umijs/max';
 import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import { Link } from 'umi';
 import Settings from '../../../../config/defaultSettings';
 
 const Login: React.FC = () => {
@@ -65,9 +64,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" style={{ height: '100%' }} src="/logo.svg" />}
-          title="鱼皮前端万用模板"
-          subTitle={'快速开发属于自己的前端项目'}
+          logo={<img alt="logo" style={{ height: '100%' }} src="/logo.png" />}
+          title="wcoder 代码生成"
+          subTitle={'代码生成器在线制作共享，大幅提高开发效率'}
           initialValues={{
             autoLogin: true,
           }}
