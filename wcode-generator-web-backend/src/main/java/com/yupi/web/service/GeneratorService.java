@@ -3,9 +3,10 @@ package com.yupi.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.web.model.dto.post.PostQueryRequest;
-import com.yupi.web.model.entity.Post;
-import com.yupi.web.model.vo.PostVO;
+import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
+import com.yupi.web.model.entity.Generator;
+import com.yupi.web.model.vo.GeneratorVO;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -14,40 +15,40 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
-public interface PostService extends IService<Post> {
+public interface GeneratorService extends IService<Generator> {
 
     /**
      * 校验
      *
-     * @param post
+     * @param generator
      * @param add
      */
-    void validPost(Post post, boolean add);
+    void validGenerator(Generator generator, boolean add);
 
     /**
      * 获取查询条件
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @return
      */
-    QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest);
+    QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest);
 
 
     /**
      * 获取帖子封装
      *
-     * @param post
+     * @param generator
      * @param request
      * @return
      */
-    PostVO getPostVO(Post post, HttpServletRequest request);
+    GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request);
 
     /**
      * 分页获取帖子封装
      *
-     * @param postPage
+     * @param generatorPage
      * @param request
      * @return
      */
-    Page<PostVO> getPostVOPage(Page<Post> postPage, HttpServletRequest request);
+    Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request);
 }

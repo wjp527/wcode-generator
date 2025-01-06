@@ -6,9 +6,9 @@ import com.yupi.web.model.dto.user.UserQueryRequest;
 import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.LoginUserVO;
 import com.yupi.web.model.vo.UserVO;
-import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
-import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import java.util.List;
 
 /**
  * 用户服务
@@ -37,7 +37,6 @@ public interface UserService extends IService<User> {
      * @return 脱敏后的用户信息
      */
     LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
-
 
 
     /**
