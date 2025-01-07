@@ -2,7 +2,7 @@
 ### @from <a href="https://yupi.icu">编程导航知识星球</a> ###
 
 
-application-local.yml
+wcode-generator-web-backend/src/main/resources/application-local.yml
 
 HELP.md
 target/
