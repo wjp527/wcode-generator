@@ -7,7 +7,8 @@ package com.wjp.maker.generator.main;
 public class MainGenerator extends GenerateTemplate {
 
     @Override
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String shellOutputPath, String jarPath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String shellOutputPath, String jarPath) {
         System.out.println("不用生成 dist 了");
+        return "";
     }
 }

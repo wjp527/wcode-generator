@@ -26,7 +26,7 @@ const handleUpdate = async (fields: API.UserUpdateRequest) => {
     return true;
   } catch (error: any) {
     hide();
-    message.error('更新失败，' + error.message);
+    message.error('更新失败: ' + error.message);
     return false;
   }
 };

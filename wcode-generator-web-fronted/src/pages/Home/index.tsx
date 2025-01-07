@@ -20,6 +20,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 
 import '../../index.css';
+import PictureUploader from '@/components/PictureUploader';
+import { history } from '@umijs/max';
 
 dayjs.extend(relativeTime);
 // 默认分页参数
@@ -187,6 +189,9 @@ const HomePage: React.FC = () => {
                   style={{ height: '250px', objectFit: 'cover' }}
                 />
               }
+              onClick={() => {
+                history.push(`/generator/detail/${item.id}`);
+              }}
             >
               <Card.Meta
                 title={<a>{item.name}</a>}
@@ -216,6 +221,8 @@ const HomePage: React.FC = () => {
           </List.Item>
         )}
       />
+
+      <PictureUploader biz="user_avatar" />
     </PageContainer>
   );
 };

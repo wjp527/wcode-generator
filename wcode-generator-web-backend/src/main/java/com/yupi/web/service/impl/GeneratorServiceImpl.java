@@ -57,12 +57,20 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         }
         String name = generator.getName();
         String description = generator.getDescription();
+        System.out.println("description = " + description);
 
         String tags = generator.getTags();
         // 创建时，参数不能为空
-        if (add) {
-            ThrowUtils.throwIf(StringUtils.isAnyBlank(name, description, tags), ErrorCode.PARAMS_ERROR);
+        if(StringUtils.isBlank(name)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "名称不能为空");
         }
+        if(StringUtils.isEmpty(description)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "描述不能为空");
+        }
+        if(StringUtils.isBlank(tags)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "标签不能为空");
+        }
+
         // 有参数则校验
         if (StringUtils.isNotBlank(name) && name.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "名称过长");

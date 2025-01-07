@@ -44,7 +44,7 @@ const TestFilePage: React.FC = () => {
   };
 
   return (
-    <Flex>
+    <Flex justify="center" gap={16}>
       <Card title="文件上传">
         <Dragger {...props}>
           <p className="ant-upload-drag-icon">

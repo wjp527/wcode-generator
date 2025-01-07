@@ -3,6 +3,7 @@ package com.wjp.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.wjp.maker.generator.JarGenerator;
 import com.wjp.maker.generator.ScriptGenerator;
 import com.wjp.maker.generator.file.DynamicFileGenerator;
@@ -46,7 +47,14 @@ public class GenerateTemplate {
 
     }
 
-    protected void buildDist(String outputPath, String sourceCopyDestPath,String shellOutputPath, String jarPath) {
+    /**
+     * 生成精简版项目代码
+     * @param outputPath
+     * @param sourceCopyDestPath
+     * @param shellOutputPath
+     * @param jarPath
+     */
+    protected String buildDist(String outputPath, String sourceCopyDestPath,String shellOutputPath, String jarPath) {
         String distOutputPath = outputPath + "-dist";
 //        String distOutputPath = outputPath + "-dist";
 
@@ -63,7 +71,16 @@ public class GenerateTemplate {
 
         // 复制源模版文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+
+        return distOutputPath;
     }
+
+    /**
+     * 生成脚本
+     * @param outputPath
+     * @param jarPath
+     * @return
+     */
 
     protected String buildScript(String outputPath, String jarPath) {
         String shellOutputPath = outputPath + File.separator + "generator";
@@ -73,6 +90,14 @@ public class GenerateTemplate {
     }
 
 
+    /**
+     * 构建jar包
+     * @param outputPath
+     * @param meta
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
     protected String buildJar(String outputPath, Meta meta) throws IOException, InterruptedException {
         // 构建jar包
         JarGenerator.doGenerate(outputPath);
@@ -83,6 +108,13 @@ public class GenerateTemplate {
         return jarPath;
     }
 
+    /**
+     * 生成代码
+     * @param meta
+     * @param outputPath
+     * @throws IOException
+     * @throws TemplateException
+     */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 获取resource目录
         ClassPathResource classPathResource = new ClassPathResource("");
@@ -172,6 +204,12 @@ public class GenerateTemplate {
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
     }
 
+    /**
+     * 复制源模版文件到生成的代码包中
+     * @param meta
+     * @param outputPath
+     * @return
+     */
     protected String copySource(Meta meta, String outputPath) {
         // 从原始模版路径 复制到 生成的代码包 中
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
@@ -180,6 +218,18 @@ public class GenerateTemplate {
         // 原始路径，目标路径，是否覆盖
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, false);
         return sourceCopyDestPath;
+    }
+
+
+    /**
+     * 构建zip压缩包
+     * @param outputPath
+     * @return
+     */
+    protected String buildZip(String outputPath) {
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath, zipPath);
+        return zipPath;
     }
 }
 

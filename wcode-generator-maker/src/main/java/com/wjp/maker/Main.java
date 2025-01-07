@@ -4,6 +4,7 @@ package com.wjp.maker;
 
 import com.wjp.maker.generator.main.GenerateTemplate;
 import com.wjp.maker.generator.main.MainGenerator;
+import com.wjp.maker.generator.main.ZipGenerator;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
@@ -11,9 +12,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
         // 创建数据模型
-        GenerateTemplate mainGenerator = new MainGenerator();
+//        GenerateTemplate generateTemplate = new MainGenerator();
+        GenerateTemplate generateTemplate = new ZipGenerator();
         // 生成代码
-        mainGenerator.doGenerate();
+        generateTemplate.doGenerate();
     }
 
 //    public static void main(String[] args) {

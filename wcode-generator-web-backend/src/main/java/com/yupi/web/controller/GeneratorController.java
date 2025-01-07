@@ -1,5 +1,6 @@
 package com.yupi.web.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yupi.web.annotation.AuthCheck;
@@ -20,13 +21,18 @@ import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.GeneratorVO;
 import com.yupi.web.service.GeneratorService;
 import com.yupi.web.service.UserService;
+import com.yupi.web.utils.CosDownloadUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
+
 
 /**
  * 帖子接口
@@ -44,6 +50,13 @@ public class GeneratorController {
 
     @Resource
     private UserService userService;
+
+    /**
+     * 下载文件
+     */
+    @Autowired
+    private CosDownloadUtils cosDownloadUtils;
+
 
     // region 增删改查
 
@@ -288,5 +301,35 @@ public class GeneratorController {
         boolean result = generatorService.updateById(generator);
         return ResultUtils.success(result);
     }
+
+    /**
+     * 根据 id 下载
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/download")
+    public void downloadGeneratorById(long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        Generator generator = generatorService.getById(id);
+        if (generator == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        String filepath = generator.getDistPath();
+        if (StrUtil.isBlank(filepath)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "产物包不存在");
+        }
+
+        // 追踪事件
+        log.info("用户 {} 下载了 {}", loginUser, filepath);
+
+        // 下载文件
+        cosDownloadUtils.downloadFile(filepath, response);
+    }
+
 
 }
