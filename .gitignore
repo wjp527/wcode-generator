@@ -5,7 +5,6 @@ generated
 .idea
 target
 application-local.yml
-wcode-generator-web-backend/src/main/resources/application-local.yml
 
 
 ### IntelliJ IDEA ###
