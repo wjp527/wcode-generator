@@ -12,7 +12,6 @@ import {
   Avatar,
   Image,
   message,
-  Space,
   Tag,
   InputRef,
   Flex,

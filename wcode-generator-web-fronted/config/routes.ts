@@ -9,6 +9,7 @@ export default [
     ],
   },
   { path: '/', icon: 'home', component: './Home', name: '主页' },
+  { path: '/test/file', icon: 'home', component: './Test/File', name: '文件上传/下载测试', hideInMenu: true },
   {
     path: '/admin',
     icon: 'crown',
