@@ -20,7 +20,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 
 import '../../index.css';
-import PictureUploader from '@/components/PictureUploader';
 import { history } from '@umijs/max';
 
 dayjs.extend(relativeTime);
@@ -179,19 +178,21 @@ const HomePage: React.FC = () => {
         }}
         dataSource={dataList}
         renderItem={(item) => (
-          <List.Item>
+          <List.Item
+            onClick={() => {
+              history.push(`/generator/detail/${item.id}`);
+            }}
+          >
             <Card
               hoverable
               cover={
                 <Image
                   src={item.picture}
                   alt={item.name}
+                  preview={false}
                   style={{ height: '250px', objectFit: 'cover' }}
                 />
               }
-              onClick={() => {
-                history.push(`/generator/detail/${item.id}`);
-              }}
             >
               <Card.Meta
                 title={<a>{item.name}</a>}
@@ -221,61 +222,8 @@ const HomePage: React.FC = () => {
           </List.Item>
         )}
       />
-
-      <PictureUploader biz="user_avatar" />
     </PageContainer>
   );
 };
 
-/**
- *   const list = data?.list || [];
-  const cardList = list && (
-    <List<ListItemDataType>
-      rowKey="id"
-      loading={loading}
-      grid={{
-        gutter: 16,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 3,
-        xl: 4,
-        xxl: 4,
-      }}
-      dataSource={list}
-      renderItem={(item) => (
-        <List.Item>
-          <Card className={styles.card} hoverable cover={<img alt={item.title} src={item.cover} />}>
-            <Card.Meta
-              title={<a>{item.title}</a>}
-              description={
-                <Paragraph
-                  ellipsis={{
-                    rows: 2,
-                  }}
-                >
-                  {item.subDescription}
-                </Paragraph>
-              }
-            />
-            <div className={styles.cardItemContent}>
-              <span>{dayjs(item.updatedAt).fromNow()}</span>
-              <div className={styles.avatarList}>
-                <AvatarList size="small">
-                  {item.members.map((member, i) => (
-                    <AvatarList.Item
-                      key={getKey(item.id, i)}
-                      src={member.avatar}
-                      tips={member.name}
-                    />
-                  ))}
-                </AvatarList>
-              </div>
-            </div>
-          </Card>
-        </List.Item>
-      )}
-    />
-  );
- */
 export default HomePage;

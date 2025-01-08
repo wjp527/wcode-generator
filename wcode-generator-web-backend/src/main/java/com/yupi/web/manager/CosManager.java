@@ -1,17 +1,23 @@
 package com.yupi.web.manager;
 
 import com.qcloud.cos.COSClient;
-import com.qcloud.cos.exception.CosServiceException;
-import com.qcloud.cos.model.COSObject;
-import com.qcloud.cos.model.GetObjectRequest;
-import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.model.*;
+import com.qcloud.cos.transfer.Download;
+import com.qcloud.cos.transfer.TransferManager;
+import com.qcloud.cos.utils.IOUtils;
+import com.yupi.web.common.ErrorCode;
 import com.yupi.web.config.CosClientConfig;
+import com.yupi.web.exception.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Cos 对象存储操作
@@ -20,6 +26,7 @@ import java.io.InputStream;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Component
+@Slf4j
 public class CosManager {
 
     @Resource
@@ -27,6 +34,9 @@ public class CosManager {
 
     @Resource
     private COSClient cosClient;
+
+
+
 
     /**
      * 上传对象
@@ -68,5 +78,62 @@ public class CosManager {
         // 2. 通过 COSClient 对象调用 getObject 方法，获取 COSObject 对象，COSObject 对象包含了对象内容和元数据信息
         COSObject cosObject = cosClient.getObject(getObjectRequest);
         return cosObject;
+    }
+
+    // 复用对象
+    private TransferManager transferManager;
+
+    // bean 加载完成后执行
+    @PostConstruct
+    public void init() {
+        // 执行初始化逻辑
+        System.out.println("Bean initialized!");
+        // 多线程并发上传下载
+        ExecutorService threadPool = Executors.newFixedThreadPool(32);
+        transferManager = new TransferManager(cosClient, threadPool);
+    }
+
+    /**
+     * 下载对象到本地文件
+     *
+     * @param key
+     * @param localFilePath
+     * @return
+     * @throws InterruptedException
+     */
+    public Download download(String key, String localFilePath) throws InterruptedException {
+        File downloadFile = new File(localFilePath);
+        GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
+        Download download = transferManager.download(getObjectRequest, downloadFile);
+        // 同步等待下载完成
+        download.waitForCompletion();
+        return download;
+    }
+
+    /**
+     * 下载文件
+     * @param filepath
+     */
+    public void downloadFile(String filepath, HttpServletResponse response) throws IOException {
+        COSObjectInputStream cosObjectInput = null;
+        try {
+            COSObject cosObject = getObject(filepath);
+            cosObjectInput = cosObject.getObjectContent();
+            // 处理下载到的流
+            byte[] bytes = IOUtils.toByteArray(cosObjectInput);
+            // 设置响应头
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("Content-Disposition", "attachment; filename=" + filepath);
+            // 写入响应
+            response.getOutputStream().write(bytes);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            log.error("file download error, filepath = " + filepath, e);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
+        } finally {
+            if (cosObjectInput != null) {
+                cosObjectInput.close();
+            }
+        }
     }
 }
