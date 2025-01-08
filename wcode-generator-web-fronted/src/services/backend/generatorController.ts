@@ -47,6 +47,21 @@ export async function downloadGeneratorByIdUsingGet(
   });
 }
 
+/** useGenerator POST /api/generator/download/use */
+export async function useGeneratorUsingPost(
+  body: API.GeneratorUseRequest,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/api/generator/download/use', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** editGenerator POST /api/generator/edit */
 export async function editGeneratorUsingPost(
   body: API.GeneratorEditRequest,

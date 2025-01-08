@@ -5,7 +5,7 @@ import {
 } from '@/services/backend/generatorController';
 import { DownloadOutlined, EditOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useParams, history, useModel } from '@umijs/max';
+import { useParams, history, useModel, Link } from '@umijs/max';
 import { Card, Col, Image, message, Row, Space, Tag, Typography, Button, Tabs } from 'antd';
 import dayjs from 'dayjs';
 import type { TabsProps } from 'antd';
@@ -156,7 +156,9 @@ const GeneratorDetailPage: React.FC = () => {
               <div className="mb-6"></div>
 
               <Space>
-                <Button type="primary">立即使用</Button>
+                <Link to={`/generator/use/${data.id}`}>
+                  <Button type="primary">立即使用</Button>
+                </Link>
                 {/* 编辑 */}
                 {editButton}
                 {/* 下载 */}

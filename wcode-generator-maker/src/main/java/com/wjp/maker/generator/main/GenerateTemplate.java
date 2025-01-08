@@ -67,7 +67,10 @@ public class GenerateTemplate {
         FileUtil.copy(jarAbsolutePath, targetAbsolutePath, true);
 
         // 复制脚本文件
+        // windows
         FileUtil.copy(shellOutputPath + ".bat", distOutputPath, true);
+        // Linux/Mac
+        // FileUtil.copy(shellOutputPath , distOutputPath, true);
 
         // 复制源模版文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);

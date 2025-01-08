@@ -458,9 +458,9 @@ public class GeneratorController {
         Files.copy(resultFile.toPath(), response.getOutputStream());
 
         // 7.清理文件
-//        CompletableFuture.runAsync(() -> {
-//            FileUtil.del(tempDirPath);
-//        });
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(tempDirPath);
+        });
     }
 
 

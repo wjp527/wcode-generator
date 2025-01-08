@@ -18,6 +18,7 @@ import {
 import { history, useSearchParams } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import ModelConfigForm from './components/ModelConfigForm';
 
 /**
  * 生成器添加页面
@@ -134,6 +135,7 @@ const GeneratorAddPage: React.FC = () => {
       {(!id || oldData) && (
         <StepsForm<API.GeneratorAddRequest>
           formRef={formRef}
+          // 表单初始值
           formProps={{
             initialValues: oldData,
           }}
@@ -151,7 +153,7 @@ const GeneratorAddPage: React.FC = () => {
               name="name"
               label="名称"
               placeholder="请输入名称"
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
             />
             <ProFormTextArea name="description" label="描述" placeholder="请输入描述" />
             <ProFormText name="basePackage" label="基础包" placeholder="请输入基础包" />
@@ -162,11 +164,9 @@ const GeneratorAddPage: React.FC = () => {
               <PictureUploader biz="generator_picture" />
             </ProFormItem>
           </StepsForm.StepForm>
-          <StepsForm.StepForm name="fileConfig" title="文件配置">
-            {/* todo */}
-          </StepsForm.StepForm>
+          <StepsForm.StepForm name="fileConfig" title="文件配置"></StepsForm.StepForm>
           <StepsForm.StepForm name="modelConfig" title="模型配置">
-            {/* todo */}
+            <ModelConfigForm formRef={formRef} oldData={oldData} />
           </StepsForm.StepForm>
           <StepsForm.StepForm name="dist" title="生成器文件">
             <ProFormItem name="distPath" label="产物包">
