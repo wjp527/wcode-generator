@@ -14,16 +14,31 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 生成代码生成器模版
+ */
 public class GenerateTemplate {
+
+    /**
+     * 生成代码生成器模版
+     * @throws TemplateException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void doGenerate() throws TemplateException, IOException, InterruptedException {
         Meta meta = MetaManager.getMetaObject();
         System.out.println(meta.toString());
-
 
         // 输出项目根路径
         String projectPath = System.getProperty("user.dir");
         // 生成的模板项目的路径
         String outputPath = projectPath + File.separator + "generated" + File.separator + meta.getName();
+
+        doGenerate(meta, outputPath);
+
+    }
+
+    public void doGenerate(Meta meta, String outputPath) throws TemplateException, IOException, InterruptedException {
         // 创建输出路径
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
@@ -48,35 +63,29 @@ public class GenerateTemplate {
     }
 
     /**
-     * 生成精简版项目代码
+     * 生成精简版程序
+     *
      * @param outputPath
      * @param sourceCopyDestPath
-     * @param shellOutputPath
+     * @param shellOutputFilePath
      * @param jarPath
+     * @return 产物包路径
      */
-    protected String buildDist(String outputPath, String sourceCopyDestPath,String shellOutputPath, String jarPath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath , String jarPath) {
         String distOutputPath = outputPath + "-dist";
-//        String distOutputPath = outputPath + "-dist";
-
-        // 生成jar文件
+        // 拷贝 jar 包
         String targetAbsolutePath = distOutputPath + File.separator + "target";
-        // 创建文件夹
         FileUtil.mkdir(targetAbsolutePath);
         String jarAbsolutePath = outputPath + File.separator + jarPath;
-        // 复制jar文件到目标文件夹
         FileUtil.copy(jarAbsolutePath, targetAbsolutePath, true);
-
-        // 复制脚本文件
-        // windows
-        FileUtil.copy(shellOutputPath + ".bat", distOutputPath, true);
-        // Linux/Mac
-        // FileUtil.copy(shellOutputPath , distOutputPath, true);
-
-        // 复制源模版文件
+        // 拷贝脚本文件
+//        FileUtil.copy(shellOutputFilePath, distOutputPath, true);
+        FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
+        // 拷贝源模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
-
         return distOutputPath;
     }
+
 
     /**
      * 生成脚本
@@ -85,7 +94,7 @@ public class GenerateTemplate {
      * @return
      */
 
-    protected String buildScript(String outputPath, String jarPath) {
+    protected String buildScript(String outputPath, String jarPath) throws IOException {
         String shellOutputPath = outputPath + File.separator + "generator";
 
         ScriptGenerator.doGenerate(shellOutputPath, jarPath);
@@ -118,102 +127,81 @@ public class GenerateTemplate {
      * @throws IOException
      * @throws TemplateException
      */
+
+    /**
+     * 代码生成
+     * @param meta
+     * @param outputPath
+     * @throws IOException
+     * @throws TemplateException
+     */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
-        // 获取resource目录
-        ClassPathResource classPathResource = new ClassPathResource("");
-        // 获取绝对路径
-        String inputResourcePath = classPathResource.getAbsolutePath();
+        // 读取 resources 目录
+        String inputResourcePath = "";
 
-
-        // Java包基础的路径
-        // com.wjp
+        // Java 包基础路径
         String outputBasePackage = meta.getBasePackage();
-        // com/wjp
         String outputBasePackagePath = StrUtil.join("/", StrUtil.split(outputBasePackage, "."));
-        // 最终通过模版生成文件的路径
         String outputBaseJavaPackagePath = outputPath + File.separator + "src/main/java/" + outputBasePackagePath;
-
 
         String inputFilePath;
         String outputFilePath;
 
         // model.DataModel
-        // 动态模板的路径: D:/fullStack/wcode-generator/wcode-generator-maker/target/classes/\templates/java/model/DataModel.java.ftl
         inputFilePath = inputResourcePath + File.separator + "templates/java/model/DataModel.java.ftl";
-        // 通过FreeMarker将动态模板转为静态模板，并放到该位置上: D:\fullStack\wcode-generator\wcode-generator-maker\generated\acm-template-pro-generator\src/main/java/com/wjp\model/DataModel.java
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "model/DataModel.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        outputFilePath = outputBaseJavaPackagePath + "/model/DataModel.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成config子命令
-        inputFilePath = inputResourcePath + "templates/java/cli/command/ConfigCommand.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/ConfigCommand.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // cli.command.ConfigCommand
+        inputFilePath = inputResourcePath + File.separator + "templates/java/cli/command/ConfigCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/command/ConfigCommand.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
+        // cli.command.GenerateCommand
+        inputFilePath = inputResourcePath + File.separator + "templates/java/cli/command/GenerateCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/command/GenerateCommand.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成 MainGenerator.java.ftl
-        inputFilePath = inputResourcePath + "templates/java/generator/MainGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "generator/MainGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // cli.command.JsonGenerateCommand
+        inputFilePath = inputResourcePath + File.separator + "templates/java/cli/command/JsonGenerateCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/command/JsonGenerateCommand.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成generate子命令
+        // cli.command.ListCommand
+        inputFilePath = inputResourcePath + File.separator + "templates/java/cli/command/ListCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/command/ListCommand.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        inputFilePath = inputResourcePath + "templates/java/cli/command/GenerateCommand.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/GenerateCommand.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // cli.CommandExecutor
+        inputFilePath = inputResourcePath + File.separator + "templates/java/cli/CommandExecutor.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/CommandExecutor.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成json-generate子命令
+        // Main
+        inputFilePath = inputResourcePath + File.separator + "templates/java/Main.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/Main.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        inputFilePath = inputResourcePath + "templates/java/cli/command/JsonGenerateCommand.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/JsonGenerateCommand.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // generator.DynamicGenerator
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/DynamicGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/DynamicGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
+        // generator.MainGenerator
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/MainGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/MainGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成list子命令
-        inputFilePath = inputResourcePath + "templates/java/cli/command/ListCommand.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/ListCommand.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // generator.StaticGenerator
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/StaticGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/StaticGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
 
-        // 动态生成CommandExecutor
-        inputFilePath = inputResourcePath + "templates/java/cli/CommandExecutor.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/CommandExecutor.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // 动态生成Main
-        inputFilePath = inputResourcePath + "templates/java/Main.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "Main.java";
-        // 动态生成项目
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // 动态生成DynamicGenerator.java.ftl
-        inputFilePath = inputResourcePath + "templates/java/generator/DynamicGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "generator/DynamicGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-
-
-        // 动态生成 StaticGenerator.java.ftl
-        inputFilePath = inputResourcePath + "templates/java/generator/StaticGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "generator/StaticGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-
-        // 动态生成 pom.xml.ftl
-        inputFilePath = inputResourcePath + "templates/pom.xml.ftl";
+        // pom.xml
+        inputFilePath = inputResourcePath + File.separator + "templates/pom.xml.ftl";
         outputFilePath = outputPath + File.separator + "pom.xml";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // 动态生成 .gitignore
-        inputFilePath = inputResourcePath + "templates/.gitignore.ftl";
-        outputFilePath = outputPath + File.separator + ".gitignore";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-
-        // 动态生成 README.md文档
-        inputFilePath = inputResourcePath + "templates/README.md.ftl";
-        outputFilePath = outputPath + File.separator + "README.md";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        DynamicFileGenerator.doGenerate(inputFilePath , outputFilePath, meta);
     }
-
     /**
      * 复制源模版文件到生成的代码包中
      * @param meta

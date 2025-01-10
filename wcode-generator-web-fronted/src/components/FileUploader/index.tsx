@@ -55,10 +55,10 @@ const FileUploader: React.FC<Props> = (Props) => {
   };
 
   return (
-    <Flex justify="center" gap={16}>
-      <Dragger {...uploadProps}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
+    <Flex justify="center" gap={16} className="w-full ">
+      <Dragger {...uploadProps} className="w-full">
+        <p className="ant-upload-drag-icon w-full">
+          <InboxOutlined className="w-full flex justify-center items-center" />
         </p>
         <p className="ant-upload-text">点击或拖拽文件到此区域上传</p>
         <p className="ant-upload-hint">{description}</p>

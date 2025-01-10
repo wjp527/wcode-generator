@@ -49,6 +49,7 @@ public class DynamicGenerator {
 
         // 调用模板对象的 process 方法生成文件
         template.process(model, out);
+        System.out.println("out: " + out);
 
         // 关闭输出流
         out.close();

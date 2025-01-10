@@ -1,6 +1,6 @@
 # 公共配置文件
-# @author <a href="https://github.com/liyupi">程序员鱼皮</a>
-# @from <a href="https://yupi.icu">编程导航知识星球</a>
+# @author <a href="https://github.com/liwjp">程序员鱼皮</a>
+# @from <a href="https://wjp.icu">编程导航知识星球</a>
 spring:
   application:
     name: wcode-generator-web-backend
@@ -74,5 +74,5 @@ knife4j:
         api-rule: package
         api-rule-resources:
           # 扫描包
-          - com.yupi.web.controller
+          - com.wjp.web.controller
 

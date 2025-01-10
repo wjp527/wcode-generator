@@ -16,9 +16,11 @@ import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { history, useSearchParams } from '@umijs/max';
-import { message } from 'antd';
+import { Alert, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import ModelConfigForm from './components/ModelConfigForm';
+import FilelConfigForm from './components/FilelConfigForm';
+import GeneratorMaker from './components/GeneratorMaker';
 
 /**
  * 生成器添加页面
@@ -29,7 +31,12 @@ const GeneratorAddPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const [oldData, setOldData] = useState<API.GeneratorAddRequest>();
-
+  // 基本信息
+  const [basicInfo, setBasicInfo] = useState<API.GeneratorEditRequest>();
+  // 模型配置
+  const [modelConfig, setModelConfig] = useState<API.ModelConfig>();
+  // 文件配置
+  const [fileConfig, setFileConfig] = useState<API.FileConfig>();
   /**
    * 加载数据
    */
@@ -121,6 +128,7 @@ const GeneratorAddPage: React.FC = () => {
     if (values.distPath && values.distPath.length > 0) {
       // @ts-ignore
       values.distPath = values.distPath[0].response.data;
+      setBasicInfo(values);
     }
 
     if (!id) {
@@ -131,51 +139,80 @@ const GeneratorAddPage: React.FC = () => {
   };
 
   return (
-    <ProCard>
-      {(!id || oldData) && (
-        <StepsForm<API.GeneratorAddRequest>
-          formRef={formRef}
-          // 表单初始值
-          formProps={{
-            initialValues: oldData,
-          }}
-          onFinish={doSubmit}
-        >
-          <StepsForm.StepForm
-            name="base"
-            title="基本信息"
-            onFinish={async () => {
-              console.log(formRef.current?.getFieldsValue(), '=-=');
-              return true;
+    <>
+      <ProCard>
+        {(!id || oldData) && (
+          <StepsForm<API.GeneratorAddRequest>
+            formRef={formRef}
+            // 表单初始值
+            formProps={{
+              initialValues: oldData,
             }}
+            onFinish={doSubmit}
           >
-            <ProFormText
-              name="name"
-              label="名称"
-              placeholder="请输入名称"
-              // rules={[{ required: true }]}
-            />
-            <ProFormTextArea name="description" label="描述" placeholder="请输入描述" />
-            <ProFormText name="basePackage" label="基础包" placeholder="请输入基础包" />
-            <ProFormText name="version" label="版本" placeholder="请输入版本" />
-            <ProFormText name="author" label="作用" placeholder="请输入作者" />
-            <ProFormSelect name="tags" label="标签" mode="tags" placeholder="请输入标签" />
-            <ProFormItem name="picture" label="图片">
-              <PictureUploader biz="generator_picture" />
-            </ProFormItem>
-          </StepsForm.StepForm>
-          <StepsForm.StepForm name="fileConfig" title="文件配置"></StepsForm.StepForm>
-          <StepsForm.StepForm name="modelConfig" title="模型配置">
-            <ModelConfigForm formRef={formRef} oldData={oldData} />
-          </StepsForm.StepForm>
-          <StepsForm.StepForm name="dist" title="生成器文件">
-            <ProFormItem name="distPath" label="产物包">
-              <FileUploader biz="generator_dist" description="请上传生成器压缩包" />
-            </ProFormItem>
-          </StepsForm.StepForm>
-        </StepsForm>
-      )}
-    </ProCard>
+            <StepsForm.StepForm
+              name="base"
+              title="基本信息"
+              onFinish={async (values) => {
+                setBasicInfo(values);
+                return true;
+              }}
+            >
+              <ProFormText
+                name="name"
+                label="名称"
+                placeholder="请输入名称"
+                // rules={[{ required: true }]}
+              />
+              <ProFormTextArea name="description" label="描述" placeholder="请输入描述" />
+              <ProFormText name="basePackage" label="基础包" placeholder="请输入基础包" />
+              <ProFormText name="version" label="版本" placeholder="请输入版本" />
+              <ProFormText name="author" label="作用" placeholder="请输入作者" />
+              <ProFormSelect name="tags" label="标签" mode="tags" placeholder="请输入标签" />
+              <ProFormItem name="picture" label="图片">
+                <PictureUploader biz="generator_picture" />
+              </ProFormItem>
+            </StepsForm.StepForm>
+            <StepsForm.StepForm
+              name="modelConfig"
+              title="模型配置"
+              onFinish={async (values) => {
+                setModelConfig(values);
+                return true;
+              }}
+            >
+              <ModelConfigForm formRef={formRef} oldData={oldData} />
+            </StepsForm.StepForm>
+            <StepsForm.StepForm
+              name="fileConfig"
+              title="文件配置"
+              onFinish={async (values) => {
+                setFileConfig(values);
+                return true;
+              }}
+            >
+              <Alert message="如果不需要使用功能在线制作功能，可不填写" type="warning" closable />
+              <div className="m-4"></div>
+              <FilelConfigForm formRef={formRef} oldData={oldData} />
+            </StepsForm.StepForm>
+            <StepsForm.StepForm name="dist" title="生成器文件">
+              <ProFormItem name="distPath" label="产物包">
+                <FileUploader biz="generator_dist" description="请上传生成器压缩包" />
+              </ProFormItem>
+              {/* <ProFormItem name="meta" label="元数据"> */}
+              <GeneratorMaker
+                meta={{
+                  ...basicInfo,
+                  ...modelConfig,
+                  ...fileConfig,
+                }}
+              />
+              {/* </ProFormItem> */}
+            </StepsForm.StepForm>
+          </StepsForm>
+        )}
+      </ProCard>
+    </>
   );
 };
 

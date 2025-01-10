@@ -18,6 +18,7 @@ public class FileGenerator {
 
         File parentFile = new File(projectPath).getParentFile();
 
+
         // 输入路径【静态模板文件路径】: D:\fullStack\wcode-generator\wcode-generator-demo-projects\acm-template
         // File.separator: 文件分隔符，在不同系统中可能不同，比如在Windows系统中是"\"，在Linux系统中是"/"
 
@@ -34,7 +35,7 @@ public class FileGenerator {
         String dynamicInputPath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
 
         // 输出路径【动态模版生成文件路径】: D:\fullStack\wcode-generator\wcode-generator-maker\MainTemplate.java
-        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
+        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/wjp/acm/MainTemplate.java";
 
 
 //        DynamicFileGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
