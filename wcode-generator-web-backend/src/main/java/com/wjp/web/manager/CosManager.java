@@ -46,8 +46,14 @@ public class CosManager {
      * @return
      */
     public PutObjectResult putObject(String key, String localFilePath) {
+        // PutObjectRequest: 是对象存储服务 SDK 提供的一个类，用于封装上传文件的请求参数。
+        // cosClientConfig.getBucket(): 获取目标存储桶（Bucket）的名称。存储桶是对象存储服务中的一个逻辑分组，用于管理对象（文件）。cosClientConfig 是一个配置类或对象，用于管理存储桶的相关信息。
+        // key: 上传后的文件路径（即目标文件名），决定了文件在对象存储中的存储位置。
+        // new File(localFilePath): 通过 localFilePath 构造一个 Java 文件对象，指向本地的文件路径。
         PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
                 new File(localFilePath));
+        // putObject(putObjectRequest): 客户端的 putObject 方法，用于上传文件到对象存储。
+        // 参数是 putObjectRequest，即刚刚创建的请求对象，包含了存储桶名称、文件路径、和文件内容。
         return cosClient.putObject(putObjectRequest);
     }
 
@@ -65,8 +71,8 @@ public class CosManager {
     }
 
     /**
-     * 下载对象
-     * @param key
+     * 下载对象 【流式下载】
+     * @param key 对象唯一键
      * @return
      */
     public COSObject getObject(String key) {

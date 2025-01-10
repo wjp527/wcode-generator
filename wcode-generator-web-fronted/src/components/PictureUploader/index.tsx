@@ -18,9 +18,11 @@ interface Props {
  */
 
 const PictureUploader: React.FC<Props> = (Props) => {
+  // 解构
   const { biz, value, onChange } = Props;
-
+  // 设置loading
   const [loading, setLoading] = useState(false);
+  // 上传配置
   const uploadProps: UploadProps = {
     name: 'file',
     multiple: false,
@@ -36,18 +38,23 @@ const PictureUploader: React.FC<Props> = (Props) => {
             biz,
           },
           {},
+          // 上传的文件
           fileObj.file,
         );
+        // 上传成功后的回调
         fileObj.onSuccess(res);
 
         // 拼接完整路径
         const fullPath = COS_HOST + res.data;
+        // 上传成功后的回调
         onChange?.(fullPath);
-
+        // 关闭loading
         setLoading(false);
       } catch (error: any) {
         console.log('上传失败: ' + error.message);
+        // 上传失败后的回调
         fileObj.onError(error);
+        // 关闭loading
         setLoading(false);
       }
     },

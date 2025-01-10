@@ -127,14 +127,6 @@ public class GenerateTemplate {
      * @throws IOException
      * @throws TemplateException
      */
-
-    /**
-     * 代码生成
-     * @param meta
-     * @param outputPath
-     * @throws IOException
-     * @throws TemplateException
-     */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 读取 resources 目录
         String inputResourcePath = "";

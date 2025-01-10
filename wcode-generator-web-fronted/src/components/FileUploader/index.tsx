@@ -9,9 +9,13 @@ import '@/index.css';
 import { UploadFile } from 'antd/lib';
 
 interface Props {
+  // 类型 【用户头像/生成器图片/生成器产物包/生成器制作模板文件】
   biz: string;
+  // 上传成功后的回调
   onChange?: (fileList: UploadFile[]) => void;
+  // 文件列表
   value?: UploadFile[];
+  // 描述
   description?: string;
 }
 
@@ -20,17 +24,26 @@ interface Props {
  */
 
 const FileUploader: React.FC<Props> = (Props) => {
+  // 解构
   const { biz, value, description, onChange } = Props;
-
+  // 设置loading
   const [loading, setLoading] = useState(false);
+  // 上传配置
   const uploadProps: UploadProps = {
     name: 'file',
+    // 是否支持多选
     multiple: false,
+    // 文件列表类型
     listType: 'text',
+    // 最大上传数量
     maxCount: 1,
+    // 文件列表
     fileList: value,
+    // 是否禁用
     disabled: loading,
+    // 文件上传成功后的回调
     onChange({ fileList }) {
+      console.log(fileList, 'fileList');
       onChange?.(fileList);
     },
     // 文件上传
@@ -42,6 +55,7 @@ const FileUploader: React.FC<Props> = (Props) => {
             biz,
           },
           {},
+          // 上传的文件
           fileObj.file,
         );
         fileObj.onSuccess(res);

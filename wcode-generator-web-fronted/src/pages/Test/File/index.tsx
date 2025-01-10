@@ -26,8 +26,11 @@ const TestFilePage: React.FC = () => {
     // 文件上传
     customRequest: async (fileObj: any) => {
       try {
+        // 开启loading
         setLoading(true);
+        // 上传文件
         const res = await testUploadFileUsingPost({}, fileObj.file);
+        // 上传成功后的回调
         fileObj.onSuccess(res);
         setValue(res.data || '');
         setLoading(false);
@@ -67,8 +70,10 @@ const TestFilePage: React.FC = () => {
         <Button
           type="primary"
           onClick={async () => {
+            // 下载文件
             const blob = await testDownloadFileUsingGet(
               {
+                // 文件路径
                 filepath: value,
               },
               {
@@ -82,6 +87,7 @@ const TestFilePage: React.FC = () => {
             // 获取文件名
             // 截取文件路径中最后一个 / 后面的字符串
             const fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+            // saveAs(): 将blob 保存为 文件
             saveAs(blob, fileName);
           }}
         >
