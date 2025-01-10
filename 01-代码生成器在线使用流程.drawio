@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.4">
   <diagram name="第 1 页" id="isT9vm6Kr_W21fUGywZT">
-    <mxGraphModel dx="880" dy="1721" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="838" dy="1695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -42,7 +42,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-8" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
-          <mxGeometry x="500" y="110" width="30" height="60" as="geometry" />
+          <mxGeometry x="490" y="30" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sMSjW9hY-ckY2-CMyo35-9" target="sMSjW9hY-ckY2-CMyo35-13">
           <mxGeometry relative="1" as="geometry" />
@@ -61,7 +61,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-9" value="前端使用页面&lt;div&gt;(表单)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="707" y="100" width="120" height="60" as="geometry" />
+          <mxGeometry x="697" y="20" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="sMSjW9hY-ckY2-CMyo35-13" target="sMSjW9hY-ckY2-CMyo35-21">
           <mxGeometry relative="1" as="geometry" />
@@ -80,13 +80,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-13" value="后端web项目" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="960" y="100" width="120" height="60" as="geometry" />
+          <mxGeometry x="950" y="20" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-21" value="数据库" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="990" y="260" width="60" height="80" as="geometry" />
+          <mxGeometry x="980" y="180" width="60" height="80" as="geometry" />
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-24" value="对象存储" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="1120" y="260" width="60" height="80" as="geometry" />
+          <mxGeometry x="1110" y="180" width="60" height="80" as="geometry" />
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="sMSjW9hY-ckY2-CMyo35-13" target="sMSjW9hY-ckY2-CMyo35-24">
           <mxGeometry relative="1" as="geometry" />
@@ -105,7 +105,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sMSjW9hY-ckY2-CMyo35-27" value="代码生成器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="100" width="120" height="60" as="geometry" />
+          <mxGeometry x="1190" y="20" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
