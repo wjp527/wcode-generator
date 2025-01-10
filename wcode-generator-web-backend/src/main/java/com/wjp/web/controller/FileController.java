@@ -94,7 +94,7 @@ public class FileController {
 
         // 有两种下载文件的方式:
         // 1. 直接下载到本地服务器上: 服务器需要进行处理这个文件，前端不需要
-        // 2. 直接通过流进行下载文件: 直接传给前端
+        // 2. 直接通过流进行下载文件: 直接传给前端  ✔
         try {
             COSObject cosObject = cosManager.getObject(filepath);
             cosObjectInput = cosObject.getObjectContent();

@@ -26,7 +26,6 @@ interface ModelConfigFormProps {
  */
 
 const ModelConfigForm: React.FC<ModelConfigFormProps> = ({ formRef, oldData }) => {
-  console.log(formRef, 'formRef');
   /**
    * 单个字段表单视图
    * @param field 字段

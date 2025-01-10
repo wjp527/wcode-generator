@@ -318,7 +318,7 @@ public class GeneratorController {
     }
 
     /**
-     * 根据 id 下载
+     * 根据 id 下载 代码生成器
      *
      * @param id
      * @return
@@ -343,7 +343,7 @@ public class GeneratorController {
         log.info("用户 {} 下载了 {}", loginUser, filepath);
 
         // 下载文件
-        cosDownloadUtils.downloadFile(filepath, response);
+        cosManager.downloadFile(filepath, response);
     }
 
 

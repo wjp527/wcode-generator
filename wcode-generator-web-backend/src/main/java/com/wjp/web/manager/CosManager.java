@@ -122,22 +122,36 @@ public class CosManager {
      */
     public void downloadFile(String filepath, HttpServletResponse response) throws IOException {
         COSObjectInputStream cosObjectInput = null;
+        // 有两种下载文件的方式:
+        // 1. 直接下载到本地服务器上: 服务器需要进行处理这个文件，前端不需要
+        // 2. 直接通过流进行下载文件: 直接传给前端 ✔
         try {
             COSObject cosObject = getObject(filepath);
             cosObjectInput = cosObject.getObjectContent();
             // 处理下载到的流
             byte[] bytes = IOUtils.toByteArray(cosObjectInput);
             // 设置响应头
+            // 流式响应
+            // application/octet-stream: 二进制流数据。对于大多数浏览器，这种类型会触发下载行为
             response.setContentType("application/octet-stream;charset=UTF-8");
+            // 设置HTTP响应的文件名
+            // setHeader(): 用于设置HTTP响应头部字段
+            // Content-Disposition:
+            // - HTTP头字段，用于指定响应的呈现方式
+            // - attachment: 响应一个附件，客户端会下载文件
+            // - filename= : 制定文件的下载名称
+            //   - filepath: 是下载到客户端显示的名称
             response.setHeader("Content-Disposition", "attachment; filename=" + filepath);
             // 写入响应
             response.getOutputStream().write(bytes);
+            // 刷新缓冲区
             response.getOutputStream().flush();
         } catch (Exception e) {
             log.error("file download error, filepath = " + filepath, e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
         } finally {
             if (cosObjectInput != null) {
+                // 用完流之后一定要调用 close()
                 cosObjectInput.close();
             }
         }

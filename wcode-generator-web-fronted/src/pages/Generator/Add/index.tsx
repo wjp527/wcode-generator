@@ -38,6 +38,8 @@ const GeneratorAddPage: React.FC = () => {
   const [modelConfig, setModelConfig] = useState<API.ModelConfig>();
   // 文件配置
   const [fileConfig, setFileConfig] = useState<API.FileConfig>();
+  const [allData, setAllData] = useState<API.GeneratorAddRequest>();
+
   /**
    * 加载数据
    */
@@ -141,34 +143,55 @@ const GeneratorAddPage: React.FC = () => {
 
   // 回显草稿数据
   useEffect(() => {
-    // 从 LocalStorage 获取数据
-    const savedBasicInfo = JSON.parse(localStorage.getItem('basicInfo') || '{}');
-    const savedModelConfig = JSON.parse(localStorage.getItem('modelConfig') || '{}');
-    const savedFileConfig = JSON.parse(localStorage.getItem('fileConfig') || '{}');
-
-    // 设置初始值
-    setOldData(savedBasicInfo);
-    setModelConfig(savedModelConfig);
-    setFileConfig(savedFileConfig);
-
-    // 更新表单值
-    if (formRef.current) {
-      formRef.current.setFieldsValue({
-        ...savedBasicInfo, // 基本信息
-        ...savedModelConfig, // 模型配置
-        ...savedFileConfig, // 文件配置
-      });
+    if (!id) {
+      // 从 LocalStorage 获取数据
+      const savedBasicInfo = JSON.parse(localStorage.getItem('basicInfo') || '{}');
+      const savedModelConfig = JSON.parse(localStorage.getItem('modelConfig') || '{}');
+      const savedFileConfig = JSON.parse(localStorage.getItem('fileConfig') || '{}');
+      // 更新表单值
+      if (formRef.current) {
+        formRef.current.setFieldsValue({
+          ...savedBasicInfo, // 基本信息
+          ...savedModelConfig, // 模型配置
+          ...savedFileConfig, // 文件配置
+        });
+      }
     }
   }, []);
 
+  // 保存草稿的主要函数
   const commandSave = async (type: string) => {
-    const formValues = await formRef.current?.validateFields();
-    // 过滤掉undefined
-    const newFormValues = Object.fromEntries(
-      Object.entries(formValues).filter(([_, value]) => value !== undefined),
-    );
-    setBasicInfo(newFormValues);
-    localStorage.setItem(type, JSON.stringify(newFormValues));
+    // 本地 新建项目
+    if (!id) {
+      const formValues = await formRef.current?.validateFields();
+      // 过滤掉undefined
+      const newFormValues = Object.fromEntries(
+        Object.entries(formValues).filter(([_, value]) => value !== undefined),
+      );
+      setBasicInfo(newFormValues);
+      localStorage.setItem(type, JSON.stringify(newFormValues));
+      message.success('保存成功');
+    } else {
+      // 使用异步更新状态并调用接口
+      const formValues = formRef.current?.getFieldsValue();
+      const newData = {
+        ...allData,
+        ...formValues,
+      };
+
+      setAllData(newData); // 更新状态
+
+      try {
+        const res = await editGeneratorUsingPost({ ...newData, id: Number(id) });
+        if (res.code === 0) {
+          message.success('保存成功');
+        } else {
+          message.error('保存失败');
+        }
+      } catch (error: any) {
+        message.error('保存失败: ' + error.message);
+      }
+    }
   };
   // 基本信息保存
   const handleSave = async () => {
@@ -200,17 +223,25 @@ const GeneratorAddPage: React.FC = () => {
               name="base"
               title="基本信息"
               onFinish={async (values) => {
-                console.log(values, 'values');
                 setBasicInfo(values);
-                localStorage.setItem('basicInfo', JSON.stringify(values)); // 保存基本信息到 LocalStorage
+                if (!id) {
+                  // 动态回显下一步的数据
+                  localStorage.setItem('basicInfo', JSON.stringify(values));
+                  const nextStepData = JSON.parse(localStorage.getItem('modelConfig') || '{}');
+                  setTimeout(() => {
+                    if (formRef.current) {
+                      formRef.current.setFieldsValue(nextStepData);
+                    }
+                  }, 0);
+                } else {
+                  const formValues = formRef.current?.getFieldsValue();
+                  const newData = {
+                    ...allData,
+                    ...formValues,
+                  };
 
-                // 动态回显下一步的数据
-                const nextStepData = JSON.parse(localStorage.getItem('modelConfig') || '{}');
-                setTimeout(() => {
-                  if (formRef.current) {
-                    formRef.current.setFieldsValue(nextStepData);
-                  }
-                }, 0);
+                  setAllData(newData); // 更新状态
+                }
                 return true;
               }}
             >
@@ -239,15 +270,24 @@ const GeneratorAddPage: React.FC = () => {
               title="模型配置"
               onFinish={async (values) => {
                 setModelConfig(values);
-                localStorage.setItem('modelConfig', JSON.stringify(values)); // 保存模型配置到 LocalStorage
-
                 // 动态回显下一步的数据
-                const nextStepData = JSON.parse(localStorage.getItem('fileConfig') || '{}');
-                setTimeout(() => {
-                  if (formRef.current) {
-                    formRef.current.setFieldsValue(nextStepData); // 更新表单值
-                  }
-                }, 0);
+                if (!id) {
+                  localStorage.setItem('modelConfig', JSON.stringify(values));
+                  const nextStepData = JSON.parse(localStorage.getItem('fileConfig') || '{}');
+                  setTimeout(() => {
+                    if (formRef.current) {
+                      formRef.current.setFieldsValue(nextStepData); // 更新表单值
+                    }
+                  }, 0);
+                } else {
+                  const formValues = formRef.current?.getFieldsValue();
+                  const newData = {
+                    ...allData,
+                    ...formValues,
+                  };
+
+                  setAllData(newData); // 更新状态
+                }
                 return true;
               }}
             >
@@ -263,6 +303,9 @@ const GeneratorAddPage: React.FC = () => {
               title="文件配置"
               onFinish={async (values) => {
                 setFileConfig(values);
+                if (!id) {
+                  localStorage.setItem('fileConfig', JSON.stringify(values));
+                }
                 return true;
               }}
             >
