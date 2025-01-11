@@ -38,8 +38,8 @@ public class MetaManager {
     private static Meta initMeta() {
         // 读取配置文件【resource/meta.json】
 //        String metaJson = ResourceUtil.readUtf8Str("meta.json");
-//        String metaJson = ResourceUtil.readUtf8Str("springboot-init-meta.json");
-        String metaJson = ResourceUtil.readUtf8Str("springboot-init-old-master-meta.json");
+        String metaJson = ResourceUtil.readUtf8Str("springboot-init-meta.json");
+//        String metaJson = ResourceUtil.readUtf8Str("springboot-init-old-master-meta.json");
         // 反序列化为Meta对象
         Meta newMeta = JSONUtil.toBean(metaJson, Meta.class);
         // 校验配置文件、处理默认值

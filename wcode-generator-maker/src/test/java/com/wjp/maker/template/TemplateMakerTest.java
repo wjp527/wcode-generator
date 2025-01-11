@@ -173,12 +173,12 @@ public class TemplateMakerTest {
         templateMakerConfig = JSONUtil.toBean(configStr, TemplateMakerConfig.class);
         TemplateMaker.makeTemplate(templateMakerConfig);
 
-        // 控制Es 配置
+//        // 控制Es 配置
         configStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker8.json");
         templateMakerConfig = JSONUtil.toBean(configStr, TemplateMakerConfig.class);
         TemplateMaker.makeTemplate(templateMakerConfig);
 
-        // 控制Es 配置
+//         控制Es 配置
         configStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker9.json");
         templateMakerConfig = JSONUtil.toBean(configStr, TemplateMakerConfig.class);
         TemplateMaker.makeTemplate(templateMakerConfig);
