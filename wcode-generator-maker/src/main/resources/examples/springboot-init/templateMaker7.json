@@ -19,7 +19,7 @@
         "fieldName": "needRedis",
         "type": "boolean",
         "description": "是否开启Redis功能",
-        "defaultValue": true
+        "defaultValue": false
       }
     ]
   }

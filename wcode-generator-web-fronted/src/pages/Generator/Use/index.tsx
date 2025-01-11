@@ -125,34 +125,35 @@ const GeneratorUsePage: React.FC = () => {
     return (
       <Form form={form} className="mb-10">
         {models.map((model) => {
+          // 如果是分组类型模型
           if (model.groupKey) {
             if (!model.models) {
               return <></>;
             }
             return (
               <Collapse
-                defaultActiveKey={[`${model.groupKey}`]}
                 key={model.groupKey}
-                items={[
-                  {
-                    key: model.groupKey,
-                    label: model.description,
-                    children: model?.models?.map((subModel) => (
-                      <Form.Item
-                        label={subModel.fieldName}
-                        // @ts-ignore
-                        name={[model.groupKey, subModel.fieldName]}
-                        key={subModel.fieldName}
-                      >
-                        <Input
-                          placeholder={subModel.description}
-                          defaultValue={subModel?.defaultValue + ''}
-                        />
-                      </Form.Item>
-                    )),
-                  },
-                ]}
-              />
+                className="mb-10"
+              >
+                <Collapse.Panel
+                  key={model.groupKey}
+                  header={model.description}
+                >
+                  {model?.models?.map((subModel) => (
+                    <Form.Item
+                      label={subModel.fieldName}
+                      // @ts-ignore
+                      name={[model.groupKey, subModel.fieldName]}
+                      key={subModel.fieldName}
+                    >
+                      <Input
+                        placeholder={subModel.description}
+                        defaultValue={subModel?.defaultValue + ''}
+                      />
+                    </Form.Item>
+                  ))}
+                </Collapse.Panel>
+              </Collapse>
             );
           } else {
             // 不是分组的

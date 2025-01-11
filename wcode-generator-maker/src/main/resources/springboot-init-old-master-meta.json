@@ -91,12 +91,6 @@
                 ]
             },
             {
-                "inputPath": "src/main/.DS_Store",
-                "outputPath": "src/main/.DS_Store",
-                "type": "file",
-                "generateType": "static"
-            },
-            {
                 "inputPath": "mvnw",
                 "outputPath": "mvnw",
                 "type": "file",
@@ -107,12 +101,6 @@
                 "outputPath": "src/main/java/com/yupi/project/model/entity/User.java",
                 "type": "file",
                 "generateType": "dynamic"
-            },
-            {
-                "inputPath": ".gitignore",
-                "outputPath": ".gitignore",
-                "type": "file",
-                "generateType": "static"
             },
             {
                 "inputPath": "src/main/java/com/yupi/project/model/dto/user/UserLoginRequest.java.ftl",
@@ -127,22 +115,16 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/yupi/project/service/impl/UserServiceImpl.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/service/impl/UserServiceImpl.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/yupi/project/model/vo/UserVO.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/model/vo/UserVO.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
                 "inputPath": "src/main/java/com/yupi/project/model/dto/user/UserRegisterRequest.java.ftl",
                 "outputPath": "src/main/java/com/yupi/project/model/dto/user/UserRegisterRequest.java",
                 "type": "file",
                 "generateType": "dynamic"
+            },
+            {
+                "inputPath": ".idea/encodings.xml",
+                "outputPath": ".idea/encodings.xml",
+                "type": "file",
+                "generateType": "static"
             },
             {
                 "inputPath": "src/main/java/com/yupi/project/config/MyBatisPlusConfig.java.ftl",
@@ -163,28 +145,10 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/yupi/project/model/dto/user/UserAddRequest.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/model/dto/user/UserAddRequest.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/resources/banner.txt",
-                "outputPath": "src/main/resources/banner.txt",
+                "inputPath": ".idea/misc.xml",
+                "outputPath": ".idea/misc.xml",
                 "type": "file",
                 "generateType": "static"
-            },
-            {
-                "inputPath": "pom.xml.ftl",
-                "outputPath": "pom.xml",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/resources/mapper/UserMapper.xml.ftl",
-                "outputPath": "src/main/resources/mapper/UserMapper.xml",
-                "type": "file",
-                "generateType": "dynamic"
             },
             {
                 "inputPath": "src/main/java/com/yupi/project/exception/GlobalExceptionHandler.java.ftl",
@@ -217,34 +181,16 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/yupi/project/common/ResultUtils.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/common/ResultUtils.java",
+                "inputPath": ".idea/workspace.xml.ftl",
+                "outputPath": ".idea/workspace.xml",
                 "type": "file",
                 "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/yupi/.DS_Store",
-                "outputPath": "src/main/java/com/yupi/.DS_Store",
-                "type": "file",
-                "generateType": "static"
             },
             {
                 "inputPath": ".DS_Store",
                 "outputPath": ".DS_Store",
                 "type": "file",
                 "generateType": "static"
-            },
-            {
-                "inputPath": "src/.DS_Store",
-                "outputPath": "src/.DS_Store",
-                "type": "file",
-                "generateType": "static"
-            },
-            {
-                "inputPath": "src/main/java/com/yupi/project/constant/UserConstant.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/constant/UserConstant.java",
-                "type": "file",
-                "generateType": "dynamic"
             },
             {
                 "inputPath": "src/main/java/com/yupi/project/common/PageRequest.java.ftl",
@@ -265,6 +211,12 @@
                 "generateType": "dynamic"
             },
             {
+                "inputPath": ".idea/jarRepositories.xml",
+                "outputPath": ".idea/jarRepositories.xml",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
                 "inputPath": "src/main/java/com/yupi/project/model/.DS_Store",
                 "outputPath": "src/main/java/com/yupi/project/model/.DS_Store",
                 "type": "file",
@@ -277,18 +229,6 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/yupi/project/annotation/AuthCheck.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/annotation/AuthCheck.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/yupi/project/mapper/UserMapper.java.ftl",
-                "outputPath": "src/main/java/com/yupi/project/mapper/UserMapper.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
                 "inputPath": "src/main/java/com/yupi/project/exception/BusinessException.java.ftl",
                 "outputPath": "src/main/java/com/yupi/project/exception/BusinessException.java",
                 "type": "file",
@@ -297,6 +237,12 @@
             {
                 "inputPath": "mvnw.cmd",
                 "outputPath": "mvnw.cmd",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": ".idea/.gitignore",
+                "outputPath": ".idea/.gitignore",
                 "type": "file",
                 "generateType": "static"
             },
@@ -325,12 +271,6 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "sql/ddl.sql",
-                "outputPath": "sql/ddl.sql",
-                "type": "file",
-                "generateType": "static"
-            },
-            {
                 "inputPath": "src/main/java/com/yupi/project/constant/CommonConstant.java.ftl",
                 "outputPath": "src/main/java/com/yupi/project/constant/CommonConstant.java",
                 "type": "file",
@@ -349,10 +289,118 @@
                 "generateType": "static"
             },
             {
+                "inputPath": ".idea/compiler.xml",
+                "outputPath": ".idea/compiler.xml",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
                 "inputPath": "src/main/java/com/yupi/project/controller/UserController.java.ftl",
                 "outputPath": "src/main/java/com/yupi/project/controller/UserController.java",
                 "type": "file",
                 "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/.DS_Store",
+                "outputPath": "src/main/.DS_Store",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": ".gitignore",
+                "outputPath": ".gitignore",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/service/impl/UserServiceImpl.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/service/impl/UserServiceImpl.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/model/vo/UserVO.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/model/vo/UserVO.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/model/dto/user/UserAddRequest.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/model/dto/user/UserAddRequest.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/resources/banner.txt",
+                "outputPath": "src/main/resources/banner.txt",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "pom.xml.ftl",
+                "outputPath": "pom.xml",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/resources/mapper/UserMapper.xml.ftl",
+                "outputPath": "src/main/resources/mapper/UserMapper.xml",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": ".idea/vcs.xml",
+                "outputPath": ".idea/vcs.xml",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/common/ResultUtils.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/common/ResultUtils.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/.DS_Store",
+                "outputPath": "src/main/java/com/yupi/.DS_Store",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/.DS_Store",
+                "outputPath": "src/.DS_Store",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "springboot-init-old-master.zip",
+                "outputPath": "springboot-init-old-master.zip",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/constant/UserConstant.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/constant/UserConstant.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/annotation/AuthCheck.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/annotation/AuthCheck.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/yupi/project/mapper/UserMapper.java.ftl",
+                "outputPath": "src/main/java/com/yupi/project/mapper/UserMapper.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "sql/ddl.sql",
+                "outputPath": "sql/ddl.sql",
+                "type": "file",
+                "generateType": "static"
             },
             {
                 "inputPath": "src/main/java/com/yupi/project/MyApplication.java.ftl",
