@@ -35,6 +35,18 @@ public class CosManager {
     @Resource
     private COSClient cosClient;
 
+    // 复用对象
+    private TransferManager transferManager;
+
+    // bean 加载完成后执行
+    @PostConstruct
+    public void init() {
+        // 执行初始化逻辑
+        System.out.println("Bean initialized!");
+        // 多线程并发上传下载
+        ExecutorService threadPool = Executors.newFixedThreadPool(32);
+        transferManager = new TransferManager(cosClient, threadPool);
+    }
 
 
 
@@ -86,38 +98,9 @@ public class CosManager {
         return cosObject;
     }
 
-    // 复用对象
-    private TransferManager transferManager;
-
-    // bean 加载完成后执行
-    @PostConstruct
-    public void init() {
-        // 执行初始化逻辑
-        System.out.println("Bean initialized!");
-        // 多线程并发上传下载
-        ExecutorService threadPool = Executors.newFixedThreadPool(32);
-        transferManager = new TransferManager(cosClient, threadPool);
-    }
 
     /**
-     * 下载对象到本地文件
-     *
-     * @param key
-     * @param localFilePath
-     * @return
-     * @throws InterruptedException
-     */
-    public Download download(String key, String localFilePath) throws InterruptedException {
-        File downloadFile = new File(localFilePath);
-        GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
-        Download download = transferManager.download(getObjectRequest, downloadFile);
-        // 同步等待下载完成
-        download.waitForCompletion();
-        return download;
-    }
-
-    /**
-     * 下载文件
+     * 下载文件【流式下载】
      * @param filepath
      */
     public void downloadFile(String filepath, HttpServletResponse response) throws IOException {
@@ -156,4 +139,26 @@ public class CosManager {
             }
         }
     }
+
+
+    /**
+     * 下载对象到本地文件
+     *
+     * @param key 从哪开始下载
+     * @param localFilePath 下载到本地哪个位置
+     * @return
+     * @throws InterruptedException
+     */
+    public Download download(String key, String localFilePath) throws InterruptedException {
+        File downloadFile = new File(localFilePath);
+        GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
+        Download download = transferManager.download(getObjectRequest, downloadFile);
+        // 同步等待下载完成
+        download.waitForCompletion();
+        return download;
+    }
+
+
+
+
 }

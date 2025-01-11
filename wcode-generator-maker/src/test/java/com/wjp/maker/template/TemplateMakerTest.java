@@ -70,7 +70,7 @@ public class TemplateMakerTest {
     public void testMakeTemplateBug2() {
         // 一、输入信息
         // 1. 项目的基本信息
-        String name = "springboot-init-generator";
+        String name = "springboot-init-old-master";
         String description = "ACM 示例模板生成器";
         Meta meta = new Meta();
         meta.setName(name);
@@ -78,7 +78,7 @@ public class TemplateMakerTest {
         // 获取这个项目的根目录
         String projectPath = System.getProperty("user.dir");
         // 项目的原始目录
-        String originProjectPath = FileUtil.getAbsolutePath(new File(projectPath).getParentFile()) + File.separator + "wcode-generator-demo-projects/springboot-init";
+        String originProjectPath = FileUtil.getAbsolutePath(new File(projectPath).getParentFile()) + File.separator + "wcode-generator-demo-projects/springboot-init-old-master";
         // 要挖坑的文件位置
         String fileInputPath1 = "./";
         // 3.输入模型参数信息【要进行挖坑的地方】
