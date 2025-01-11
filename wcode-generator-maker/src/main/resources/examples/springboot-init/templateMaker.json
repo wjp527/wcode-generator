@@ -1,8 +1,8 @@
 {
   "id": 1,
   "meta": {
-    "name": "springboot-init-generator",
+    "name": "springboot-init-old-master",
     "description": "Spring Boot 模板项目生成器"
   },
-  "originProjectPath": "../../../wcode-generator-demo-projects/springboot-init"
+  "originProjectPath": "../../../wcode-generator-demo-projects/springboot-init-old-master"
 }

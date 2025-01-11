@@ -36,10 +36,14 @@ spring:
   servlet:
     multipart:
       # 大小限制
-      max-file-size: 10MB
+      max-file-size: 20MB
+      max-request-size: 20MB
 server:
   address: 0.0.0.0
   port: 8120
+  tomcat:
+    max-upload-size: 20971520 # 20MB
+    max-http-header-size: 8192  # 你可以根据需要调整
   servlet:
     context-path: /api
     # cookie 30 天过期

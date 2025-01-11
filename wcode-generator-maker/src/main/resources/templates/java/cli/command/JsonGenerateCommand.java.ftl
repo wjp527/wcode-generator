@@ -30,11 +30,6 @@ public class JsonGenerateCommand implements Callable {
 
     @CommandLine.Option(names = {"-f","--file"}, arity="0..1",description="json 文件路径",interactive=true, echo=true)
     private String filePath;
-    /**
-     * 核心模块
-     */
-    static DataModel.MainTemplate mainTemplate = new DataModel.MainTemplate();
-
 
 
     /**

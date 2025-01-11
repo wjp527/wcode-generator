@@ -364,13 +364,18 @@ public class GeneratorController {
         // 1-1.需要用户登录
         User loginUser = userService.getLoginUser(request);
         log.info("userId = {} 使用了生成器 id = {}", loginUser.getId(), id);
+        if(loginUser == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "请先登录");
+        }
 
+        // 获取到 某一个 生成器信息
         Generator generator = generatorService.getById(id);
         if (generator == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
 
         // 2.生成器的存储路径
+        // 获取到存在 cos 中的 dist 路径
         String distPath = generator.getDistPath();
         if (StrUtil.isBlank(distPath)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "产物包不存在");
@@ -379,8 +384,11 @@ public class GeneratorController {
         // 3.从对象存储下载生成器的压缩包
 
         // 3-1.定义独立的工作空间
+        // 项目根目录
         String projectPath = System.getProperty("user.dir");
+        // 临时的项目目录
         String tempDirPath = String.format("%s/.temp/use/%s", projectPath, id);
+        // 临时的压缩包目录
         String zipFilePath = tempDirPath + "/dist.zip";
 
         // 如果不存在，则创建文件
@@ -400,20 +408,26 @@ public class GeneratorController {
 
         // 3-3.将用户输入的参数写到 json 文件中
         String dataModelFilePath = tempDirPath + "/dataModel.json";
+        // 将 json 转为 字符串
         String jsonStr = JSONUtil.toJsonStr(dataModel);
+        // 写入到 dataModel.json 文件中
         FileUtil.writeUtf8String(jsonStr, dataModelFilePath);
 
         // 4.执行脚本
         // 找到脚本文件所在路径
         // ✨要注意，如果不是 windows 系统，找 generator 文件而不是 bat
         File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
+                // 流的方式
                 .stream()
+                // 进行过滤出 generator.bat 文件
                 .filter(file -> file.isFile()
                         && "generator.bat".equals(file.getName()))
+                // 找到第一个文件
                 .findFirst()
+                // 如果找不到，则抛出异常
                 .orElseThrow(RuntimeException::new);
 
-        // 4-1.添加可执行权限
+        // 4-1.添加可执行权限【Linux / Mac】
         try {
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
@@ -426,6 +440,7 @@ public class GeneratorController {
         // 注意，如果是 mac / linux 系统，要用 "./generator"
         // D:/fullStack/wcode-generator/wcode-generator-web-backend/.temp/use/7/dist/generator.bat
         String scriptAbsolutePath = scriptFile.getAbsolutePath().replace("\\", "/");
+        // 通过自动执行 json-generate 命令，自动将 dataModel.json 文件中的数据，自动生成代码
         String[] commands = new String[] {scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
 
         // 这里一定要拆分！
@@ -434,6 +449,7 @@ public class GeneratorController {
         processBuilder.directory(scriptDir);
 
         try {
+            // 启动进程
             Process process = processBuilder.start();
 
             // 读取命令的输出
@@ -441,7 +457,8 @@ public class GeneratorController {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                // 输出脚本的执行日志
+                System.out.println("输出: " + line);
             }
 
             // 等待命令执行完成
@@ -455,25 +472,22 @@ public class GeneratorController {
         // 6.压缩得到的生成结果，返回给前端
         String generatedPath = scriptDir.getAbsolutePath() + "/generated";
         String resultPath = tempDirPath + "/result.zip";
+        // 压缩生成的结果 调用脚本生成最终可执行的代码压缩包
         File resultFile = ZipUtil.zip(generatedPath, resultPath);
 
         // 设置响应头
         response.setContentType("application/octet-stream;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=" + resultFile.getName());
+        // 输出文件到响应流
         Files.copy(resultFile.toPath(), response.getOutputStream());
 
-        // 7.清理文件
+        // 7.清理文件【异步】
         CompletableFuture.runAsync(() -> {
             FileUtil.del(tempDirPath);
         });
     }
 
 
-    /**
-     * 制作生成器
-     * @param generatorMakeRequest
-     * @param request
-     */
     /**
      * 制作代码生成器
      *
@@ -491,12 +505,20 @@ public class GeneratorController {
         User loginUser = userService.getLoginUser(request);
         log.info("userId = {} 在线制作生成器", loginUser.getId());
 
+        if(loginUser == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "请先登录");
+        }
+
         // 2) 创建独立的工作空间，下载压缩包到本地
         String projectPath = System.getProperty("user.dir");
+        // 生成随机id
         String id = IdUtil.getSnowflakeNextId() + RandomUtil.randomString(6);
+        // 生成临时文件目录
         String tempDirPath = String.format("%s/.temp/make/%s", projectPath, id);
+        // 生成本地压缩包目录
         String localZipFilePath = tempDirPath + "/project.zip";
 
+        // 如果不存在，则创建文件目录
         if (!FileUtil.exist(localZipFilePath)) {
             FileUtil.touch(localZipFilePath);
         }
@@ -512,7 +534,9 @@ public class GeneratorController {
         File unzipDistDir = ZipUtil.unzip(localZipFilePath);
 
         // 4）构造 meta 对象和生成器的输出路径
+        // 获取绝对路径
         String sourceRootPath = unzipDistDir.getAbsolutePath();
+        // 设置 meta 对象的 sourceRootPath 属性
         meta.getFileConfig().setSourceRootPath(sourceRootPath);
         // 校验和处理默认值
         MetaValidator.doValidAndFill(meta);
@@ -543,5 +567,6 @@ public class GeneratorController {
             FileUtil.del(tempDirPath);
         });
     }
+
 
 }
