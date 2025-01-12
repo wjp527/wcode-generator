@@ -17,6 +17,21 @@ export async function addGeneratorUsingPost(
   });
 }
 
+/** cacheGeneratorById POST /api/generator/cache */
+export async function cacheGeneratorByIdUsingPost(
+  body: API.GeneratorCacheRequset,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/api/generator/cache', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** deleteGenerator POST /api/generator/delete */
 export async function deleteGeneratorUsingPost(
   body: API.DeleteRequest,
@@ -113,6 +128,21 @@ export async function makeGeneratorUsingPost(
   options?: { [key: string]: any },
 ) {
   return request<any>('/api/generator/make', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** makeAsyncGenerator POST /api/generator/make/async */
+export async function makeAsyncGeneratorUsingPost(
+  body: API.GeneratorMakeRequest,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/api/generator/make/async', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

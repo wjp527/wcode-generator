@@ -11,6 +11,7 @@ import com.wjp.maker.generator.main.GenerateTemplate;
 import com.wjp.maker.generator.main.ZipGenerator;
 import com.wjp.maker.meta.MetaValidator;
 import com.wjp.web.annotation.AuthCheck;
+import com.wjp.web.codegeneratorzmq.CodeGeneratorMessageProducer;
 import com.wjp.web.common.BaseResponse;
 import com.wjp.web.common.DeleteRequest;
 import com.wjp.web.common.ErrorCode;
@@ -39,7 +40,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.BindException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
@@ -74,9 +74,17 @@ public class GeneratorController {
     @Autowired
     private CosDownloadUtils cosDownloadUtils;
 
+    /**
+     * COS 管理器
+     */
     @Resource
     private CosManager cosManager;
 
+    /**
+     * 代码生成器消息生产者
+     */
+    @Resource
+    private CodeGeneratorMessageProducer codeGeneratorMessageProducer;
 
     // region 增删改查
 
@@ -608,6 +616,113 @@ public class GeneratorController {
         String outputPath = tempDirPath + "/generated/" +meta.getName() ;
 
         // 5）调用 maker 方法制作生成器
+        // 计时
+        stopWatch = new StopWatch();
+        stopWatch.start();
+        GenerateTemplate generateTemplate = new ZipGenerator();
+        try {
+            generateTemplate.doGenerate(meta, outputPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "制作失败");
+        }
+        stopWatch.stop();
+        log.info("制作代码生成器耗时：{} ms", stopWatch.getTotalTimeMillis());
+
+        // 6）下载制作好的生成器压缩包
+        // 计时
+        stopWatch = new StopWatch();
+        stopWatch.start();
+        String suffix = "-dist.zip";
+        String zipFileName = meta.getName() + suffix;
+        // 生成器压缩包的绝对路径
+        String distZipFilePath = outputPath + suffix;
+
+        // 设置响应头
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
+        Files.copy(Paths.get(distZipFilePath), response.getOutputStream());
+        stopWatch.stop();
+        log.info("下载代码生成器压缩包耗时：{} ms", stopWatch.getTotalTimeMillis());
+
+        // 7）清理工作空间的文件
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(tempDirPath);
+        });
+    }
+
+
+    /**
+     * 制作代码生成器【异步 RabbitMQ】
+     *
+     * @param generatorMakeRequest
+     * @param request
+     * @param response
+     */
+    @PostMapping("/make/async")
+    public void makeAsyncGenerator(@RequestBody GeneratorMakeRequest generatorMakeRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1) 输入参数
+        Meta meta = generatorMakeRequest.getMeta();
+        String zipFilePath = generatorMakeRequest.getZipFilePath();
+
+        // 需要用户登录
+        User loginUser = userService.getLoginUser(request);
+        log.info("userId = {} 在线制作生成器", loginUser.getId());
+
+        if(loginUser == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "请先登录");
+        }
+
+        // 2) 创建独立的工作空间，下载压缩包到本地
+        String projectPath = System.getProperty("user.dir");
+        // 生成随机id
+        String id = IdUtil.getSnowflakeNextId() + RandomUtil.randomString(6);
+        // 生成临时文件目录
+        String tempDirPath = String.format("%s/.temp/make/%s", projectPath, id);
+        // 生成本地压缩包目录
+        String localZipFilePath = tempDirPath + "/project.zip";
+
+        // 如果不存在，则创建文件目录
+        if (!FileUtil.exist(localZipFilePath)) {
+            FileUtil.touch(localZipFilePath);
+        }
+
+        // 下载文件
+        // 计时
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        try {
+            cosManager.download(zipFilePath, localZipFilePath);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "压缩包下载失败");
+        }
+        stopWatch.stop();
+        log.info("下载文件耗时：{} ms", stopWatch.getTotalTimeMillis());
+
+        // 3）解压，得到项目模板文件
+        // 计时
+        stopWatch = new StopWatch();
+        stopWatch.start();
+        File unzipDistDir = ZipUtil.unzip(localZipFilePath);
+        stopWatch.stop();
+        log.info("解压文件耗时：{} ms", stopWatch.getTotalTimeMillis());
+
+        // 4）构造 meta 对象和生成器的输出路径
+        // 获取绝对路径
+        String sourceRootPath = unzipDistDir.getAbsolutePath();
+        // 设置 meta 对象的 sourceRootPath 属性
+        meta.getFileConfig().setSourceRootPath(sourceRootPath);
+        // 校验和处理默认值
+        MetaValidator.doValidAndFill(meta);
+        String outputPath = tempDirPath + "/generated/" +meta.getName() ;
+
+        // 5）调用 maker 方法制作生成器
+        Map<String, Object> message = new HashMap<>();
+        message.put("meta", meta);
+        message.put("outputPath", outputPath);
+        // 发送消息
+        codeGeneratorMessageProducer.sendMessage(message.toString());
+
         // 计时
         stopWatch = new StopWatch();
         stopWatch.start();
