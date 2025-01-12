@@ -22,7 +22,9 @@ const AuthorInfo: React.FC<Props> = (props) => {
   }
   return (
     <div className="mt-4">
-      <Card.Meta title={data.name} description={data.description}
+      <Card.Meta
+        title={data.user?.userName}
+        description={data.description}
         avatar={<Avatar src={data?.user?.userAvatar} size={64} />}
       ></Card.Meta>
     </div>

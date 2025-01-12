@@ -14,7 +14,7 @@
         "fieldName": "needMySQL",
         "type": "boolean",
         "description": "是否开启数据库配置",
-        "defaultValue": false
+        "defaultValue": true
       }
     ]
   }

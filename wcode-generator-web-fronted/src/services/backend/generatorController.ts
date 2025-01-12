@@ -137,6 +137,21 @@ export async function listMyGeneratorVoByPageUsingPost(
   });
 }
 
+/** toLead POST /api/generator/toLead */
+export async function toLeadUsingPost(
+  body: API.GeneratorToLeadRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseMeta_>('/api/generator/toLead', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** updateGenerator POST /api/generator/update */
 export async function updateGeneratorUsingPost(
   body: API.GeneratorUpdateRequest,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { Button, Card, Form, FormListFieldData, Input, Select, Space } from 'antd';
 import '@/index.css';
@@ -27,6 +27,16 @@ interface FilelConfigFormProps {
 
 const FilelConfigForm: React.FC<FilelConfigFormProps> = ({ formRef, oldData }) => {
   console.log(formRef, 'formRef');
+
+  useEffect(() => {
+    // 当 oldData 更新时，通过 setFieldsValue 更新表单的值
+    if (oldData) {
+      formRef.current?.setFieldsValue({
+        fileConfig: oldData?.fileConfig, // 确保 modelConfig 数据结构正确
+      });
+    }
+  }, [oldData]); // 依赖 oldData，确保数据变化时更新表单
+
   /**
    * 单个字段表单视图
    * @param field 字段

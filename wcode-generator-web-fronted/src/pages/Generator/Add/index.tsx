@@ -5,6 +5,7 @@ import {
   addGeneratorUsingPost,
   editGeneratorUsingPost,
   getGeneratorVoByIdUsingGet,
+  toLeadUsingPost,
 } from '@/services/backend/generatorController';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import {
@@ -22,7 +23,9 @@ import { useEffect, useRef, useState } from 'react';
 import ModelConfigForm from './components/ModelConfigForm';
 import FilelConfigForm from './components/FilelConfigForm';
 import GeneratorMaker from './components/GeneratorMaker';
-
+import {  FileAddOutlined, UploadOutlined } from '@ant-design/icons';
+// 节流
+import { throttle } from 'lodash';
 /**
  * 生成器添加页面
  * @returns
@@ -39,6 +42,9 @@ const GeneratorAddPage: React.FC = () => {
   // 文件配置
   const [fileConfig, setFileConfig] = useState<API.FileConfig>();
   const [allData, setAllData] = useState<API.GeneratorAddRequest>();
+
+  // 导入配置json文件
+  const [fileList, setFileList] = useState<any[]>([]); // 用来存储子组件传递过来的文件列表
 
   /**
    * 加载数据
@@ -78,6 +84,8 @@ const GeneratorAddPage: React.FC = () => {
     if (!id) return;
     loadData();
   }, [id]);
+
+  useEffect(() => {}, [oldData]);
 
   /**
    * 添加
@@ -141,6 +149,8 @@ const GeneratorAddPage: React.FC = () => {
     }
   };
 
+  // 使用节流函数，确保每3秒钟只请求一次
+  const throttledRequest = throttle(doSubmit, 10000);
   // 回显草稿数据
   useEffect(() => {
     if (!id) {
@@ -207,6 +217,39 @@ const GeneratorAddPage: React.FC = () => {
   const handleFileConfigSave = async () => {
     commandSave('fileConfig');
   };
+
+ 
+  // 子组件的 onChange 回调函数
+  const handleFileChange = (newFileList: any[]) => {
+    setFileList(newFileList); // 更新父组件的状态
+  };
+
+  // 导入模型配置json文件
+  const [toLeadLoading, setToLeadLoading] = useState(false);
+  const handleToLeadTemplateAsync = async (type: string) => {
+    if (!type) {
+      message.error('请选择要导入的文件');
+      return;
+    }
+    if (fileList[0] !== undefined) {
+      setToLeadLoading(true);
+      const res = await toLeadUsingPost({
+        key: fileList[0]?.response?.data || '',
+        type,
+      });
+      if (res.code === 0) {
+        message.success('导入成功');
+        setOldData(res.data);
+        setToLeadLoading(false);
+      } else {
+        message.error('导入失败');
+        setToLeadLoading(false);
+      }
+    }
+  };
+  const handleToLeadTemplate = (type: string) => {
+    handleToLeadTemplateAsync(type);
+  };
   return (
     <>
       <ProCard>
@@ -217,7 +260,7 @@ const GeneratorAddPage: React.FC = () => {
             formProps={{
               initialValues: oldData,
             }}
-            onFinish={doSubmit}
+            onFinish={throttledRequest}
           >
             <StepsForm.StepForm
               name="base"
@@ -261,6 +304,7 @@ const GeneratorAddPage: React.FC = () => {
               </ProFormItem>
               <ProFormItem>
                 <Button htmlType="button" onClick={handleSave}>
+                  <FileAddOutlined />
                   保存为草稿
                 </Button>
               </ProFormItem>
@@ -292,9 +336,32 @@ const GeneratorAddPage: React.FC = () => {
               }}
             >
               <ProFormItem>
-                <Button htmlType="button" onClick={handleModelConfigSave}>
-                  保存为草稿
-                </Button>
+                <FileUploader
+                  biz="generator_to_lead_by_model_template"
+                  description="请上传模型配置json文件"
+                  value={fileList} // 将父组件的 fileList 传给子组件
+                  onChange={handleFileChange} // 传递回调函数给子组件
+                />
+
+                <div className="mt-10 flex">
+                  <div className="mr-4">
+                    <Button htmlType="button" onClick={handleModelConfigSave}>
+                      <FileAddOutlined />
+                      保存为草稿
+                    </Button>
+                  </div> 
+                  <div>
+                    <Button
+                      htmlType="button"
+                      type="primary"
+                      onClick={() => handleToLeadTemplate('generator_to_lead_by_model_template')}
+                      loading={toLeadLoading}
+                    >
+                      <UploadOutlined />
+                      导入
+                    </Button>
+                  </div>
+                </div>
               </ProFormItem>
               <ModelConfigForm formRef={formRef} oldData={oldData} />
             </StepsForm.StepForm>
@@ -310,11 +377,34 @@ const GeneratorAddPage: React.FC = () => {
               }}
             >
               <Alert message="如果不需要使用功能在线制作功能，可不填写" type="warning" closable />
-              <div className="m-4"></div>
+              <div className="m-10"></div>
               <ProFormItem>
-                <Button htmlType="button" onClick={handleFileConfigSave}>
-                  保存为草稿
-                </Button>
+                <FileUploader
+                  biz="generator_to_lead_by_file_template"
+                  description="请上传文件配置json文件"
+                  value={fileList} // 将父组件的 fileList 传给子组件
+                  onChange={handleFileChange} // 传递回调函数给子组件
+                />
+
+                <div className="mt-10 flex">
+                  <div className="mr-4">
+                    <Button htmlType="button" onClick={handleFileConfigSave}>
+                      <FileAddOutlined />
+                      保存为草稿
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      htmlType="button"
+                      type="primary"
+                      onClick={() => handleToLeadTemplate('generator_to_lead_by_file_template')}
+                      loading={toLeadLoading}
+                    >
+                      <UploadOutlined />
+                      导入
+                    </Button>
+                  </div>
+                </div>
               </ProFormItem>
               <FilelConfigForm formRef={formRef} oldData={oldData} />
             </StepsForm.StepForm>
