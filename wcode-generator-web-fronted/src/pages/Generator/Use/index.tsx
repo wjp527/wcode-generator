@@ -5,7 +5,7 @@ import {
 } from '@/services/backend/generatorController';
 import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useParams, useModel, Link } from '@umijs/max';
+import { useParams, useModel, Link, history } from '@umijs/max';
 import {
   Card,
   Col,
@@ -81,6 +81,18 @@ const GeneratorUsePage: React.FC = () => {
   // 下载
   const handleDownload = async () => {
     const dataModel = form.getFieldsValue();
+    console.log(dataModel.basePackage !== '', 'dataModel.basePackage');
+    if (currentUser === undefined) {
+      message.error('请登录');
+      history.push('/user/login');
+      return;
+    }
+
+    if (!dataModel.basePackage) {
+      message.warning('请填写完整信息');
+      return;
+    }
+
     setDownloadLoading(true);
     try {
       /* eslint-disable react-hooks/rules-of-hooks */
@@ -95,6 +107,11 @@ const GeneratorUsePage: React.FC = () => {
         },
       );
 
+      console.log(blob, 'bloc');
+      if (blob.code === 40100) {
+        history.push('/user/login');
+        return;
+      }
       // 使用 file-saver 来保存文件
       const fullPath = COS_HOST + (data.distPath || '');
       // 获取文件名
@@ -131,14 +148,8 @@ const GeneratorUsePage: React.FC = () => {
               return <></>;
             }
             return (
-              <Collapse
-                key={model.groupKey}
-                className="mb-10"
-              >
-                <Collapse.Panel
-                  key={model.groupKey}
-                  header={model.description}
-                >
+              <Collapse key={model.groupKey} className="mb-10">
+                <Collapse.Panel key={model.groupKey} header={model.description}>
                   {model?.models?.map((subModel) => (
                     <Form.Item
                       label={subModel.fieldName}

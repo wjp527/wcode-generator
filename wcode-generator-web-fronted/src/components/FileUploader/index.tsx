@@ -43,7 +43,6 @@ const FileUploader: React.FC<Props> = (Props) => {
     disabled: loading,
     // 文件上传成功后的回调
     onChange({ fileList }) {
-      console.log(fileList, 'fileList');
       onChange?.(fileList);
     },
     // 文件上传

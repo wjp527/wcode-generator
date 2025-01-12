@@ -17,8 +17,8 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/wjp/project/model/dto/post/PostAddRequest.java.ftl",
-                        "outputPath": "src/main/java/com/wjp/project/model/dto/post/PostAddRequest.java",
+                        "inputPath": "src/main/resources/mapper/PostMapper.xml.ftl",
+                        "outputPath": "src/main/resources/mapper/PostMapper.xml",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -29,8 +29,8 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/resources/mapper/PostMapper.xml.ftl",
-                        "outputPath": "src/main/resources/mapper/PostMapper.xml",
+                        "inputPath": "src/main/java/com/wjp/project/model/dto/post/PostAddRequest.java.ftl",
+                        "outputPath": "src/main/java/com/wjp/project/model/dto/post/PostAddRequest.java",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -47,8 +47,8 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/wjp/project/model/dto/post/PostQueryRequest.java.ftl",
-                        "outputPath": "src/main/java/com/wjp/project/model/dto/post/PostQueryRequest.java",
+                        "inputPath": "src/main/java/com/wjp/project/model/enums/PostReviewStatusEnum.java.ftl",
+                        "outputPath": "src/main/java/com/wjp/project/model/enums/PostReviewStatusEnum.java",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -59,8 +59,8 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/wjp/project/model/enums/PostReviewStatusEnum.java.ftl",
-                        "outputPath": "src/main/java/com/wjp/project/model/enums/PostReviewStatusEnum.java",
+                        "inputPath": "src/main/java/com/wjp/project/model/dto/post/PostQueryRequest.java.ftl",
+                        "outputPath": "src/main/java/com/wjp/project/model/dto/post/PostQueryRequest.java",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -71,14 +71,14 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/wjp/project/model/entity/Post.java.ftl",
-                        "outputPath": "src/main/java/com/wjp/project/model/entity/Post.java",
+                        "inputPath": "src/main/java/com/wjp/project/model/enums/PostGenderEnum.java.ftl",
+                        "outputPath": "src/main/java/com/wjp/project/model/enums/PostGenderEnum.java",
                         "type": "file",
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/wjp/project/model/enums/PostGenderEnum.java.ftl",
-                        "outputPath": "src/main/java/com/wjp/project/model/enums/PostGenderEnum.java",
+                        "inputPath": "src/main/java/com/wjp/project/model/entity/Post.java.ftl",
+                        "outputPath": "src/main/java/com/wjp/project/model/entity/Post.java",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -91,16 +91,16 @@
                 ]
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/config/Knife4jConfig.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/config/Knife4jConfig.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
                 "inputPath": "mvnw",
                 "outputPath": "mvnw",
                 "type": "file",
                 "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/wjp/project/config/Knife4jConfig.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/config/Knife4jConfig.java",
+                "type": "file",
+                "generateType": "dynamic"
             },
             {
                 "inputPath": ".idea/encodings.xml",
@@ -235,14 +235,14 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/model/vo/UserVO.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/model/vo/UserVO.java",
+                "inputPath": "src/main/java/com/wjp/project/model/dto/user/UserUpdateRequest.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/model/dto/user/UserUpdateRequest.java",
                 "type": "file",
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/model/dto/user/UserUpdateRequest.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/model/dto/user/UserUpdateRequest.java",
+                "inputPath": "src/main/java/com/wjp/project/model/vo/UserVO.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/model/vo/UserVO.java",
                 "type": "file",
                 "generateType": "dynamic"
             },
@@ -271,16 +271,16 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/resources/banner.txt",
-                "outputPath": "src/main/resources/banner.txt",
-                "type": "file",
-                "generateType": "static"
-            },
-            {
                 "inputPath": "pom.xml.ftl",
                 "outputPath": "pom.xml",
                 "type": "file",
                 "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/resources/banner.txt",
+                "outputPath": "src/main/resources/banner.txt",
+                "type": "file",
+                "generateType": "static"
             },
             {
                 "inputPath": "src/main/resources/mapper/UserMapper.xml.ftl",
@@ -295,14 +295,14 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/common/ErrorCode.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/common/ErrorCode.java",
+                "inputPath": "src/main/java/com/wjp/project/aop/AuthInterceptor.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/aop/AuthInterceptor.java",
                 "type": "file",
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/aop/AuthInterceptor.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/aop/AuthInterceptor.java",
+                "inputPath": "src/main/java/com/wjp/project/common/ErrorCode.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/common/ErrorCode.java",
                 "type": "file",
                 "generateType": "dynamic"
             },
@@ -319,22 +319,16 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/wjp/project/model/dto/user/UserAddRequest.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/model/dto/user/UserAddRequest.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
                 "inputPath": "src/.DS_Store",
                 "outputPath": "src/.DS_Store",
                 "type": "file",
                 "generateType": "static"
             },
             {
-                "inputPath": "springboot-init-old-master.zip",
-                "outputPath": "springboot-init-old-master.zip",
+                "inputPath": "src/main/java/com/wjp/project/model/dto/user/UserAddRequest.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/model/dto/user/UserAddRequest.java",
                 "type": "file",
-                "generateType": "static"
+                "generateType": "dynamic"
             },
             {
                 "inputPath": "src/main/java/com/wjp/project/model/entity/User.java.ftl",
@@ -385,23 +379,10 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/resources/application.yml.ftl",
-                "outputPath": "src/main/resources/application.yml",
+                "inputPath": "src/main/java/com/.DS_Store",
+                "outputPath": "src/main/java/com/.DS_Store",
                 "type": "file",
-                "generateType": "dynamic",
-                "condition": "needMySQL"
-            },
-            {
-                "inputPath": "src/main/java/com/wjp/project/constant/UserConstant.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/constant/UserConstant.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/wjp/project/common/ResultUtils.java.ftl",
-                "outputPath": "src/main/java/com/wjp/project/common/ResultUtils.java",
-                "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "src/main/java/com/wjp/project/.DS_Store",
@@ -410,10 +391,22 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/.DS_Store",
-                "outputPath": "src/main/java/com/.DS_Store",
+                "inputPath": "src/main/java/com/wjp/project/common/ResultUtils.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/common/ResultUtils.java",
                 "type": "file",
-                "generateType": "static"
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/java/com/wjp/project/constant/UserConstant.java.ftl",
+                "outputPath": "src/main/java/com/wjp/project/constant/UserConstant.java",
+                "type": "file",
+                "generateType": "dynamic"
+            },
+            {
+                "inputPath": "src/main/resources/application.yml.ftl",
+                "outputPath": "src/main/resources/application.yml",
+                "type": "file",
+                "generateType": "dynamic"
             },
             {
                 "inputPath": "src/main/java/com/wjp/project/model/dto/user/UserQueryRequest.java.ftl",
@@ -486,15 +479,15 @@
                 "defaultValue": true
             },
             {
-                "fieldName": "needMySQL",
-                "type": "boolean",
-                "description": "是否开启数据库配置",
-                "defaultValue": false
-            },
-            {
                 "fieldName": "needPost",
                 "type": "boolean",
                 "description": "是否开启帖子功能",
+                "defaultValue": true
+            },
+            {
+                "fieldName": "needMySQL",
+                "type": "boolean",
+                "description": "是否开启数据库配置",
                 "defaultValue": true
             },
             {
@@ -508,12 +501,6 @@
                 "type": "String",
                 "description": "基础包名",
                 "defaultValue": "com.wjp"
-            },
-            {
-                "fieldName": "needEs",
-                "type": "boolean",
-                "description": "是否开启ES功能",
-                "defaultValue": false
             },
             {
                 "fieldName": "needRedis",

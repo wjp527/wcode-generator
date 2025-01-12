@@ -23,6 +23,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseMeta_ = {
+    code?: number;
+    data?: Meta;
+    message?: string;
+  };
+
   type BaseResponsePageGenerator_ = {
     code?: number;
     data?: PageGenerator_;
@@ -164,6 +170,11 @@ declare namespace API {
     tags?: string[];
     userId?: number;
     version?: string;
+  };
+
+  type GeneratorToLeadRequest = {
+    key?: string;
+    type?: string;
   };
 
   type GeneratorUpdateRequest = {

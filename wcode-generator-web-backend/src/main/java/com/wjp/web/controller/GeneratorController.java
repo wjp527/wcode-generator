@@ -23,6 +23,7 @@ import com.wjp.maker.meta.Meta;
 import com.wjp.web.model.dto.generator.*;
 import com.wjp.web.model.entity.Generator;
 import com.wjp.web.model.entity.User;
+import com.wjp.web.model.enums.FileUploadBizEnum;
 import com.wjp.web.model.vo.GeneratorVO;
 import com.wjp.web.service.GeneratorService;
 import com.wjp.web.service.UserService;
@@ -40,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -363,8 +365,9 @@ public class GeneratorController {
 
         // 1-1.需要用户登录
         User loginUser = userService.getLoginUser(request);
-        log.info("userId = {} 使用了生成器 id = {}", loginUser.getId(), id);
-        if(loginUser == null) {
+        log.info("userId = {} 使用了生成器 id = {}", loginUser != null ? loginUser.getId() : null, id);
+        if (loginUser == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // 设置为401
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "请先登录");
         }
 
@@ -479,7 +482,13 @@ public class GeneratorController {
         response.setContentType("application/octet-stream;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=" + resultFile.getName());
         // 输出文件到响应流
-        Files.copy(resultFile.toPath(), response.getOutputStream());
+        try {
+            // 输出文件到响应流
+            Files.copy(resultFile.toPath(), response.getOutputStream());
+        } catch (IOException e) {
+            // 捕获异常，防止继续响应
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "文件传输失败");
+        }
 
         // 7.清理文件【异步】
         CompletableFuture.runAsync(() -> {
@@ -566,6 +575,84 @@ public class GeneratorController {
         CompletableFuture.runAsync(() -> {
             FileUtil.del(tempDirPath);
         });
+    }
+
+
+    @PostMapping("/toLead")
+    public BaseResponse<Meta> toLead(@RequestBody GeneratorToLeadRequest generatorToLeadRequest, HttpServletRequest request) {
+
+        // 1.校验参数
+        // 判断参数是否为空
+        String key = generatorToLeadRequest.getKey();
+        // type: modelConfig / fileConfig
+        String type = generatorToLeadRequest.getType();
+
+        if(key == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "key【路径】不能为空");
+        }
+
+        // key路径是否在cos中存在 && type 是否在FileUploadBizEnum枚举中定义
+        FileUploadBizEnum configEnum = FileUploadBizEnum.getEnumByValue(type);
+        if(configEnum == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "type【类型】不正确");
+        }
+
+        // 2.判断用户是否登录
+         User loginUser = userService.getLoginUser(request);
+        if(loginUser == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "请先登录");
+        }
+
+        // 3.读取cos中的文件
+        String projectPath = System.getProperty("user.dir");
+        // 生成随机id
+        String id = IdUtil.getSnowflakeNextId() + RandomUtil.randomString(6);
+        // 生成临时文件目录
+        String tempDirPath = String.format("%s/.temp/to_lead/%s", projectPath, id);
+        // 生成模型配置文件目录
+        String modelFilePath = tempDirPath + "/model.json";
+
+        // 如果不存在，则创建文件目录
+        if (!FileUtil.exist(modelFilePath)) {
+            FileUtil.touch(modelFilePath);
+        }
+
+        // 下载文件
+        try {
+            cosManager.download(key, modelFilePath);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "压缩包下载失败");
+        }
+
+
+
+
+        // 进行Hutool工具类进行读取
+        String Str = FileUtil.readUtf8String(modelFilePath);
+        Meta Config = JSONUtil.toBean(Str, Meta.class);
+
+        // 根据type，进行动态的对该文件进行filter筛选
+        Meta ConfigFilter = new Meta();
+        Map<String, Object> filterMap = new HashMap<>();
+        switch (configEnum) {
+            case GENERATOR_TO_LEAD_BY_MODEL_TEMPLATE:
+                // 读取模板文件
+                Meta.ModelConfig modelConfig = Config.getModelConfig();
+                List<Meta.ModelConfig.ModelInfo> models = modelConfig.getModels();
+                ConfigFilter.setModelConfig(modelConfig);
+                break;
+                case GENERATOR_TO_LEAD_BY_FILE_TEMPLATE:
+                // 读取模板文件
+                Meta.FileConfig fileConfig = Config.getFileConfig();
+                List<Meta.FileConfig.FileInfo> fileInfoList = fileConfig.getFiles();
+                ConfigFilter.setFileConfig(fileConfig);
+                break;
+            default:
+                break;
+        }
+
+        // 返回结果
+        return ResultUtils.success(ConfigFilter);
     }
 
 
