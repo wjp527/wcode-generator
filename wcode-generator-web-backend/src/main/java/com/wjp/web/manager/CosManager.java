@@ -10,12 +10,14 @@ import com.wjp.web.config.CosClientConfig;
 import com.wjp.web.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -111,8 +113,32 @@ public class CosManager {
         try {
             COSObject cosObject = getObject(filepath);
             cosObjectInput = cosObject.getObjectContent();
+
+//            // 这种方式: 会以流的方式，一点一点的下载到本地 【不过不见得比下面的方式快】
+//            response.setContentType("application/octet-stream;charset=UTF-8");
+//            response.setHeader("Content-Disposition", "attachment; filename=" + filepath);
+//
+//            // 处理下载到的流
+//            try(OutputStream out = response.getOutputStream()) {
+//                // 设置缓冲区大小
+//                byte[] buffer = new byte[4096];
+//                // 从流中读取数据，并写入到输出流中
+//                int bytesRend;
+//                // 循环读取流
+//                while((bytesRend = cosObjectInput.read(buffer)) != -1) {
+//                    // 写入到输出流中
+//                    out.write(buffer, 0, bytesRend);
+//                }
+//            } catch(Exception e) {
+//                // 处理异常
+//                e.printStackTrace();
+//            }
+
+
+            // 这种方式: 直接将文件下载到本地
             // 处理下载到的流
             byte[] bytes = IOUtils.toByteArray(cosObjectInput);
+
             // 设置响应头
             // 流式响应
             // application/octet-stream: 二进制流数据。对于大多数浏览器，这种类型会触发下载行为
