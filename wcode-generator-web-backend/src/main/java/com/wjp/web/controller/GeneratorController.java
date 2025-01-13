@@ -1,11 +1,11 @@
 package com.wjp.web.controller;
 
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.*;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wjp.maker.generator.main.GenerateTemplate;
 import com.wjp.maker.generator.main.ZipGenerator;
@@ -19,6 +19,7 @@ import com.wjp.web.common.ResultUtils;
 import com.wjp.web.constant.UserConstant;
 import com.wjp.web.exception.BusinessException;
 import com.wjp.web.exception.ThrowUtils;
+import com.wjp.web.manager.CacheManager;
 import com.wjp.web.manager.CosManager;
 import com.wjp.maker.meta.Meta;
 import com.wjp.web.model.dto.generator.*;
@@ -33,6 +34,8 @@ import com.wjp.web.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -85,6 +89,13 @@ public class GeneratorController {
      */
     @Resource
     private CodeGeneratorMessageProducer codeGeneratorMessageProducer;
+
+
+//    @Resource
+//    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private CacheManager cacheManager;
 
     // region 增删改查
 
@@ -243,6 +254,57 @@ public class GeneratorController {
      * @param request
      * @return
      */
+    @PostMapping("/list/page/vo/fast")
+    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPageFast(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+                                                                 HttpServletRequest request) {
+        long current = generatorQueryRequest.getCurrent();
+        long size = generatorQueryRequest.getPageSize();
+
+
+        // 获取缓存的 key
+        String cacheKey = getPageCacheKey(generatorQueryRequest);
+        // 获取操作对象【Caffeine 缓存】
+        Object cacheValue = cacheManager.get(cacheKey);
+        // 有缓存
+        if(cacheValue != null) {
+            return ResultUtils.success((Page<GeneratorVO>) cacheValue);
+
+        }
+
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        QueryWrapper<Generator> queryWrapper = generatorService.getQueryWrapper(generatorQueryRequest);
+        // 优化，只返回必要的参数，如果要进入详情，那就调用接口，这样做的原因是: 用户访问的多了，页面加载的就会越慢，影响用户体验，优化数据库查询，禁止 直接用 * 查询字段
+        queryWrapper.select(
+                "id","name","description","tags","picture","status","userId","createTime","updateTime"
+        );
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
+                queryWrapper);
+
+        Page<GeneratorVO> generatorVOPage = generatorService.getGeneratorVOPage(generatorPage, request);
+
+//        这种方法也是可以的，她说最方便，最快捷的，但是用了多级缓存之后，就不需要他了，【Caffeine + Redis】
+//        // 只返回必要的参数，如果要进入详情，那就调用接口，这样做的原因是: 用户访问的多了，页面加载的就会越慢，影响用户体验
+//        generatorVOPage.getRecords().forEach(item -> {
+//            item.setFileConfig(null);
+//            item.setModelConfig(null);
+//        });
+
+
+        // 写入缓存【Caffeine 缓存】
+        // 缓存过期时间设置为 100 分钟 ✨✨✨
+        cacheManager.put(cacheKey, generatorVOPage);
+
+        return ResultUtils.success(generatorVOPage);
+    }
+
+    /**
+     * 分页获取列表（封装类）
+     *
+     * @param generatorQueryRequest
+     * @param request
+     * @return
+     */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                                  HttpServletRequest request) {
@@ -250,9 +312,22 @@ public class GeneratorController {
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+
+        // 计时
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
                 generatorService.getQueryWrapper(generatorQueryRequest));
-        return ResultUtils.success(generatorService.getGeneratorVOPage(generatorPage, request));
+        stopWatch.stop();
+        log.info("查询生成器耗时：{} ms", stopWatch.getTotalTimeMillis());
+
+        // 计时
+        stopWatch = new StopWatch();
+        stopWatch.start();
+        Page<GeneratorVO> generatorVOPage = generatorService.getGeneratorVOPage(generatorPage, request);
+        stopWatch.stop();
+        log.info("查询关联信息耗时：{} ms", stopWatch.getTotalTimeMillis());
+        return ResultUtils.success(generatorVOPage);
     }
 
     /**
@@ -429,7 +504,6 @@ public class GeneratorController {
         // 计时
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
         try {
             // 下载文件
             cosManager.download(distPath, zipFilePath);
@@ -889,5 +963,18 @@ public class GeneratorController {
 
     }
 
+    /**
+     * 获取分页缓存 key
+     * @param generatorQueryRequest
+     * @return
+     */
+    public static String getPageCacheKey(GeneratorQueryRequest generatorQueryRequest) {
+        String jsonStr = JSONUtil.toJsonStr(generatorQueryRequest);
+        // 请求参数编码
+        String base64 = Base64Encoder.encode(jsonStr);
+        // 缓存key
+        String key = "generator:page:" + base64;
+        return key;
+    }
 
 }

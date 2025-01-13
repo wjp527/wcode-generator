@@ -1,4 +1,7 @@
-import { listGeneratorVoByPageUsingPost } from '@/services/backend/generatorController';
+import {
+  listGeneratorVoByPageFastUsingPost,
+  listGeneratorVoByPageUsingPost,
+} from '@/services/backend/generatorController';
 import { PageContainer, ProFormText, QueryFilter, ProFormSelect } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -26,7 +29,7 @@ dayjs.extend(relativeTime);
 // 默认分页参数
 const DEFAULT_PAGE_PARAMS: PageRequest = {
   current: 1,
-  pageSize: 4,
+  pageSize: 14,
   sortField: 'createTime',
   sortOrder: 'descend',
 };
@@ -46,7 +49,8 @@ const HomePage: React.FC = () => {
   // 搜索数据
   const doSearch = async () => {
     setLoading(true);
-    let res = await listGeneratorVoByPageUsingPost(searchParams);
+    let res = await listGeneratorVoByPageFastUsingPost(searchParams);
+    // let res = await listGeneratorVoByPageUsingPost(searchParams);
     if (res.code === 0) {
       setDataList(res.data?.records || []);
       setTotal(Number(res.data?.total) || 0);
