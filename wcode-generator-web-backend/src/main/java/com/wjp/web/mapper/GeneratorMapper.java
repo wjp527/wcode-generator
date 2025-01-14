@@ -2,6 +2,9 @@ package com.wjp.web.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wjp.web.model.entity.Generator;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * @author wjp
@@ -10,6 +13,13 @@ import com.wjp.web.model.entity.Generator;
  * @Entity com.wjp.web.model.entity.Generator
  */
 public interface GeneratorMapper extends BaseMapper<Generator> {
+
+    /**
+     * 查询已删除的生成器
+     * @return
+     */
+    @Select("SELECT id, distPath from generator WHERE isDelete = 1")
+    List<Generator> listDeleteGenerator();
 
 }
 

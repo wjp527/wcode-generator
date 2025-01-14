@@ -88,10 +88,10 @@ const GeneratorUsePage: React.FC = () => {
       return;
     }
 
-    if (!dataModel.basePackage) {
-      message.warning('请填写完整信息');
-      return;
-    }
+    // if (!dataModel.basePackage) {
+    //   message.warning('请填写完整信息');
+    //   return;
+    // }
 
     setDownloadLoading(true);
     try {
