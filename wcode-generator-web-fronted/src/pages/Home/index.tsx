@@ -1,6 +1,6 @@
 import {
   listGeneratorVoByPageFastUsingPost,
-  listGeneratorVoByPageUsingPost,
+  matchGeneratorsUsingPost,
 } from '@/services/backend/generatorController';
 import { PageContainer, ProFormText, QueryFilter, ProFormSelect } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
@@ -27,9 +27,10 @@ import { history } from '@umijs/max';
 
 dayjs.extend(relativeTime);
 // 默认分页参数
-const DEFAULT_PAGE_PARAMS: PageRequest = {
+const DEFAULT_PAGE_PARAMS = {
   current: 1,
-  pageSize: 14,
+  pageSize: 12,
+  searchText: '',
   sortField: 'createTime',
   sortOrder: 'descend',
 };
@@ -50,7 +51,6 @@ const HomePage: React.FC = () => {
   const doSearch = async () => {
     setLoading(true);
     let res = await listGeneratorVoByPageFastUsingPost(searchParams);
-    // let res = await listGeneratorVoByPageUsingPost(searchParams);
     if (res.code === 0) {
       setDataList(res.data?.records || []);
       setTotal(Number(res.data?.total) || 0);
@@ -62,21 +62,50 @@ const HomePage: React.FC = () => {
   // 搜索框
   const searchRef = useRef<InputRef>(null);
 
+  // 随你心动
+  const heartBeat = async () => {
+    let res = await matchGeneratorsUsingPost({
+      num: 12,
+    });
+    if (res.code === 0) {
+      if (res.data) {
+        res?.data.map((item) => {
+          item.tags = JSON.parse(item.tags || '[]');
+          return item;
+        });
+
+        setDataList(res.data || []);
+        setTotal(Number(res.data) || 0);
+      }
+    } else {
+      message.error(res.message);
+    }
+  };
+
   // tabs
   const onChange = (key: string) => {
-    console.log(key);
+    if (key === '0') {
+      setSearchParams({
+        ...DEFAULT_PAGE_PARAMS,
+        sortField: 'createTime',
+        sortOrder: 'descend',
+      });
+    }
+    if (key === '1') {
+      heartBeat();
+    }
   };
 
   const items: TabsProps['items'] = [
     {
-      key: '最新',
+      key: '0',
       label: '最新',
       children: '',
     },
     {
-      key: '推荐',
-      label: '推荐',
-      children: ' ',
+      key: '1',
+      label: '✨随你心动',
+      children: '',
     },
   ];
 
@@ -110,9 +139,9 @@ const HomePage: React.FC = () => {
       >
         <Input.Search
           ref={searchRef}
-          placeholder="input search text"
+          placeholder="请输入内容"
           allowClear
-          enterButton="Search"
+          enterButton="搜索"
           size="large"
           style={{
             width: '40vw',

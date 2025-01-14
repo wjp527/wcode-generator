@@ -3,6 +3,8 @@ package com.wjp.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wjp.web.common.ErrorCode;
 import com.wjp.web.constant.CommonConstant;
 import com.wjp.web.exception.BusinessException;
@@ -13,9 +15,11 @@ import com.wjp.web.model.enums.UserRoleEnum;
 import com.wjp.web.model.vo.LoginUserVO;
 import com.wjp.web.model.vo.UserVO;
 import com.wjp.web.service.UserService;
+import com.wjp.web.utils.AIgorithumUtils;
 import com.wjp.web.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.util.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -23,6 +27,8 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.wjp.web.constant.UserConstant.USER_LOGIN_STATE;
@@ -41,6 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 盐值，混淆密码
      */
     public static final String SALT = "wjp";
+
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -119,6 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
+        //
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
@@ -234,4 +242,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 sortField);
         return queryWrapper;
     }
+
 }

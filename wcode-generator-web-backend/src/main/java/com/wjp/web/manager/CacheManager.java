@@ -20,7 +20,7 @@ public class CacheManager {
     // 操作缓存的客户端【Caffeine 缓存】
     // 缓存过期时间是100分钟，最大缓存数量是10_000,超过10_000[10000]就删除最旧的缓存
     Cache<String, Object> localCache = Caffeine.newBuilder()
-            .expireAfterWrite(100, TimeUnit.MINUTES)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
             .maximumSize(10_000)
             .build();
 
@@ -36,7 +36,7 @@ public class CacheManager {
         // 本地缓存插入数据
         localCache.put(key, value);
         // 向 Redis 中插入数据 100 分钟过期
-        redisTemplate.opsForValue().set(key, value, 100, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, value, 10, TimeUnit.MINUTES);
     }
 
     /**

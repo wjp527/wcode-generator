@@ -69,7 +69,7 @@ mybatis-plus:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
-# 对象存储w1
+# 对象存储
 # todo 需替换配置
 # 新建 application-local.yml， 这里用于设置你的腾讯云cos的秘钥信息(✨✨✨并且这个文件一定不要让git进行托管，因为一旦上传到github，就会被人恶意使用)
 cos:

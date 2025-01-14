@@ -23,6 +23,7 @@ import com.wjp.web.manager.CacheManager;
 import com.wjp.web.manager.CosManager;
 import com.wjp.maker.meta.Meta;
 import com.wjp.web.model.dto.generator.*;
+import com.wjp.web.model.dto.user.UserMatchRequest;
 import com.wjp.web.model.entity.Generator;
 import com.wjp.web.model.entity.User;
 import com.wjp.web.model.enums.FileUploadBizEnum;
@@ -31,6 +32,9 @@ import com.wjp.web.service.GeneratorService;
 import com.wjp.web.service.UserService;
 import com.wjp.web.utils.CosDownloadUtils;
 import com.wjp.web.utils.FileUtils;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,7 +272,6 @@ public class GeneratorController {
         // 有缓存
         if(cacheValue != null) {
             return ResultUtils.success((Page<GeneratorVO>) cacheValue);
-
         }
 
         // 限制爬虫
@@ -975,6 +978,24 @@ public class GeneratorController {
         // 缓存key
         String key = "generator:page:" + base64;
         return key;
+    }
+
+
+    /**
+     * 匹配用户
+     * @param userMatchRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/match")
+    public BaseResponse<List<Generator>> matchGenerators(@RequestBody UserMatchRequest userMatchRequest, HttpServletRequest request) {
+        long num = userMatchRequest.getNum();
+        if(num <= 0 || num >= 20) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "页数不对");
+        }
+        User loginUser = userService.getLoginUser(request);
+        List<Generator> userList = generatorService.matchGenerators(num,loginUser);
+        return ResultUtils.success(userList);
     }
 
 }

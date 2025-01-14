@@ -167,6 +167,21 @@ export async function makeAsyncGeneratorUsingPost(
   });
 }
 
+/** matchGenerators POST /api/generator/match */
+export async function matchGeneratorsUsingPost(
+  body: API.UserMatchRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseListGenerator_>('/api/generator/match', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listMyGeneratorVOByPage POST /api/generator/my/list/page/vo */
 export async function listMyGeneratorVoByPageUsingPost(
   body: API.GeneratorQueryRequest,

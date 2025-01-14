@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListGenerator_ = {
+    code?: number;
+    data?: Generator[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -345,6 +351,7 @@ declare namespace API {
     createTime?: string;
     id?: number;
     isDelete?: number;
+    tags?: string;
     updateTime?: string;
     userAccount?: string;
     userAvatar?: string;
@@ -355,6 +362,7 @@ declare namespace API {
   };
 
   type UserAddRequest = {
+    tags?: string;
     userAccount?: string;
     userAvatar?: string;
     userName?: string;
@@ -366,12 +374,17 @@ declare namespace API {
     userPassword?: string;
   };
 
+  type UserMatchRequest = {
+    num?: number;
+  };
+
   type UserQueryRequest = {
     current?: number;
     id?: number;
     pageSize?: number;
     sortField?: string;
     sortOrder?: string;
+    tags?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;
@@ -384,6 +397,7 @@ declare namespace API {
   };
 
   type UserUpdateMyRequest = {
+    tags?: string;
     userAvatar?: string;
     userName?: string;
     userProfile?: string;
@@ -391,6 +405,7 @@ declare namespace API {
 
   type UserUpdateRequest = {
     id?: number;
+    tags?: string;
     userAvatar?: string;
     userName?: string;
     userProfile?: string;

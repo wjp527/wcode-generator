@@ -14,6 +14,9 @@ import com.wjp.web.model.entity.User;
 import com.wjp.web.model.vo.LoginUserVO;
 import com.wjp.web.model.vo.UserVO;
 import com.wjp.web.service.UserService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -277,4 +280,6 @@ public class UserController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+
 }
