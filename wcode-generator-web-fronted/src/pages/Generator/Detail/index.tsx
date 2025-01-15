@@ -106,7 +106,7 @@ const GeneratorDetailPage: React.FC = () => {
     currentUser?.userRole === 'admin') && (
     <Button
       // 未登录，不允许下载
-      disabled={!currentUser?.id}
+      // disabled={!currentUser?.id}
       icon={<DownloadOutlined />}
       onClick={async () => {
         try {
@@ -121,11 +121,15 @@ const GeneratorDetailPage: React.FC = () => {
           );
 
           // 使用 file-saver 来保存文件
-          const fullPath = COS_HOST + (data.distPath || '');
-          // 获取文件名
-          // 截取文件路径中最后一个 / 后面的字符串
-          const fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-          saveAs(blob, fileName);
+          if (currentUser?.id) {
+            const fullPath = COS_HOST + (data.distPath || '');
+            // 获取文件名
+            // 截取文件路径中最后一个 / 后面的字符串
+            const fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+            saveAs(blob, fileName);
+          } else {
+            message.warning('未登录，不允许下载');
+          }
         } catch (error) {
           message.error('下载失败');
         }
@@ -175,7 +179,7 @@ const GeneratorDetailPage: React.FC = () => {
               </Space>
             </Col>
             <Col flex="320px" span={12}>
-              <Image src={data?.picture} alt="" />
+              <Image src={COS_HOST + data?.picture} alt="" />
             </Col>
           </Row>
         </Card>

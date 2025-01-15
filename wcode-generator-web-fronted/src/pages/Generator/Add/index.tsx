@@ -153,6 +153,11 @@ const GeneratorAddPage: React.FC = () => {
     } else {
       doUpdate(id, values);
     }
+
+    // 移除本地存储数据
+    localStorage.removeItem('basicInfo');
+    localStorage.removeItem('modelConfig');
+    localStorage.removeItem('fileConfig');
   };
 
   // 使用节流函数，确保每3秒钟只请求一次

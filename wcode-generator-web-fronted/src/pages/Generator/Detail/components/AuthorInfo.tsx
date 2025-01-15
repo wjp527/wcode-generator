@@ -1,6 +1,7 @@
 import { Avatar, Card } from 'antd';
 
 import '@/index.css';
+import { COS_HOST } from '../../../../constants';
 /**
  * 生成器详情页面
  * @returns
@@ -25,7 +26,7 @@ const AuthorInfo: React.FC<Props> = (props) => {
       <Card.Meta
         title={data.user?.userName}
         description={data.description}
-        avatar={<Avatar src={data?.user?.userAvatar} size={64} />}
+        avatar={<Avatar src={COS_HOST + data?.user?.userAvatar} size={64} />}
       ></Card.Meta>
     </div>
   );

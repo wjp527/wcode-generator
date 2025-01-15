@@ -232,7 +232,9 @@ public class GeneratorController {
         if (generator == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        return ResultUtils.success(generatorService.getGeneratorVO(generator, request));
+        GeneratorVO generatorVO = generatorService.getGeneratorVO(generator, request);
+
+        return ResultUtils.success(generatorVO);
     }
 
     /**
