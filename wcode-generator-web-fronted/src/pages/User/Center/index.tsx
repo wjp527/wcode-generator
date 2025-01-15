@@ -37,6 +37,7 @@ const UserCenter: React.FC = () => {
       message.success('更新成功');
       // 刷新页面
       init();
+      window.location.reload();
     } else {
       message.error('更新失败：' + res.message);
     }
