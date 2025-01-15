@@ -17,7 +17,7 @@ import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
-import { history, useSearchParams } from '@umijs/max';
+import { history, useModel, useSearchParams } from '@umijs/max';
 import { Alert, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import ModelConfigForm from './components/ModelConfigForm';
@@ -31,6 +31,9 @@ import { throttle } from 'lodash';
  * @returns
  */
 const GeneratorAddPage: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState ?? {};
+
   const formRef = useRef<ProFormInstance>();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
@@ -81,6 +84,10 @@ const GeneratorAddPage: React.FC = () => {
    * 加载数据
    */
   useEffect(() => {
+    if (!currentUser?.id) {
+      history.push('/user/login');
+      return;
+    }
     if (!id) return;
     loadData();
   }, [id]);

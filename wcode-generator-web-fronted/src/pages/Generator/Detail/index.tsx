@@ -6,7 +6,7 @@ import {
 import { DownloadOutlined, EditOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useParams, history, useModel, Link } from '@umijs/max';
-import { Card, Col, Image, message, Row, Space, Tag, Typography, Button, Tabs } from 'antd';
+import { Card, Col, Image, message, Row, Space, Tag, Typography, Button, Tabs, Alert } from 'antd';
 import dayjs from 'dayjs';
 import type { TabsProps } from 'antd';
 
@@ -105,6 +105,8 @@ const GeneratorDetailPage: React.FC = () => {
   const downloadButton = ((data.distPath !== null && data.distPath !== '') ||
     currentUser?.userRole === 'admin') && (
     <Button
+      // 未登录，不允许下载
+      disabled={!currentUser?.id}
       icon={<DownloadOutlined />}
       onClick={async () => {
         try {
@@ -135,6 +137,11 @@ const GeneratorDetailPage: React.FC = () => {
 
   return (
     <PageContainer title={<></>} loading={loading}>
+      {currentUser?.id ? (
+        <></>
+      ) : (
+        <Alert message="未登录，不允许使用" type="warning" closable className="mb-4" />
+      )}
       {data && (
         <Card>
           <Row justify="space-between" gutter={[32, 32]}>
@@ -157,7 +164,9 @@ const GeneratorDetailPage: React.FC = () => {
 
               <Space>
                 <Link to={`/generator/use/${data.id}`}>
-                  <Button type="primary">立即使用</Button>
+                  <Button type="primary" disabled={!currentUser?.id}>
+                    立即使用
+                  </Button>
                 </Link>
                 {/* 编辑 */}
                 {editButton}
