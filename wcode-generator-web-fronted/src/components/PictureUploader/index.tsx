@@ -73,7 +73,7 @@ const PictureUploader: React.FC<Props> = (Props) => {
   return (
     <Flex justify="center" gap={16}>
       <Upload {...uploadProps}>
-        {value ? <img src={value} alt="图片" className="w-full" /> : uploadButton}
+        {value ? <img src={COS_HOST + value} alt="图片" className="w-full" /> : uploadButton}
       </Upload>
     </Flex>
   );
