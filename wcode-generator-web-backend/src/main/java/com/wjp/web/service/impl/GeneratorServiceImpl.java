@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wjp.web.common.ErrorCode;
 import com.wjp.web.constant.CommonConstant;
+import com.wjp.web.constant.FileConstant;
 import com.wjp.web.exception.BusinessException;
 import com.wjp.web.mapper.GeneratorMapper;
 import com.wjp.web.model.dto.generator.GeneratorQueryRequest;
@@ -137,6 +138,7 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
     }
 
 
+
     /**
      * 将实体类 转为封装类
      *
@@ -146,6 +148,12 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      */
     @Override
     public GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request) {
+        String picture = generator.getPicture();
+        // 去掉 picture 中 https://wcoder-1308962059.cos.ap-shanghai.myqcloud.com(FileConstant.COS_HOST) 这部分
+        // 防止小人知道web服务器的地址，直接暴力访问，导致我的钱包空空如也
+        picture = picture.substring(picture.indexOf(FileConstant.COS_HOST) + FileConstant.COS_HOST.length());
+
+        generator.setPicture(picture);
         GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
         long generatorId = generator.getId();
         // 1. 关联查询用户信息
@@ -153,6 +161,9 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         User user = null;
         if (userId != null && userId > 0) {
             user = userService.getById(userId);
+            String userAvatar = user.getUserAvatar();
+            userAvatar = userAvatar.substring(userAvatar.indexOf(FileConstant.COS_HOST) + FileConstant.COS_HOST.length());
+            user.setUserAvatar(userAvatar);
         }
         UserVO userVO = userService.getUserVO(user);
         generatorVO.setUser(userVO);
@@ -168,6 +179,13 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      * @param request
      * @return
      */
+    /**
+     * 将实体类的分页 转为 封装类的分页
+     *
+     * @param generatorPage
+     * @param request
+     * @return
+     */
     @Override
     public Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request) {
         List<Generator> generatorList = generatorPage.getRecords();
@@ -176,6 +194,7 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
             return generatorVOPage;
         }
         // 1. 关联查询用户信息
+        // 去除picture中的https://wcoder-1308962059.cos.ap-shanghai.myqcloud.com(FileConstant.COS_HOST)
         Set<Long> userIdSet = generatorList.stream().map(Generator::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
@@ -183,17 +202,37 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         // 填充信息
         List<GeneratorVO> generatorVOList = generatorList.stream().map(generator -> {
             GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
+            // 去除 picture 中的 COS_HOST URL
+            String picture = generatorVO.getPicture();
+            if (picture != null && picture.contains(FileConstant.COS_HOST)) {
+                picture = picture.replace(FileConstant.COS_HOST, ""); // 替换 COS_HOST
+                generatorVO.setPicture(picture); // 更新 picture 字段
+            }
+
             Long userId = generator.getUserId();
             User user = null;
             if (userIdUserListMap.containsKey(userId)) {
                 user = userIdUserListMap.get(userId).get(0);
             }
+
+            // 去除 userAvatar 中的 COS_HOST URL
+            if (user != null && user.getUserAvatar() != null) {
+                String userAvatar = user.getUserAvatar();
+                if (userAvatar.contains(FileConstant.COS_HOST)) {
+                    userAvatar = userAvatar.replace(FileConstant.COS_HOST, ""); // 替换 COS_HOST
+                    user.setUserAvatar(userAvatar); // 更新 userAvatar 字段
+                }
+            }
+
+
             generatorVO.setUser(userService.getUserVO(user));
             return generatorVO;
         }).collect(Collectors.toList());
         generatorVOPage.setRecords(generatorVOList);
         return generatorVOPage;
     }
+
+
 
 
 

@@ -45,7 +45,7 @@ const PictureUploader: React.FC<Props> = (Props) => {
         fileObj.onSuccess(res);
 
         // 拼接完整路径
-        const fullPath = COS_HOST + res.data;
+        const fullPath = COS_HOST + res.data ?? '';
         // 上传成功后的回调
         onChange?.(fullPath);
         // 关闭loading
@@ -73,7 +73,7 @@ const PictureUploader: React.FC<Props> = (Props) => {
   return (
     <Flex justify="center" gap={16}>
       <Upload {...uploadProps}>
-        {value ? <img src={value} alt="图片" className="w-full" /> : uploadButton}
+        {value ? <img src={COS_HOST + value} alt="图片" className="w-full" /> : uploadButton}
       </Upload>
     </Flex>
   );

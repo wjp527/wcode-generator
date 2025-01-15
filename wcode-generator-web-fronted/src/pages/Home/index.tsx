@@ -24,6 +24,7 @@ import { UserOutlined } from '@ant-design/icons';
 
 import '../../index.css';
 import { history } from '@umijs/max';
+import { COS_HOST } from '@/constants';
 
 dayjs.extend(relativeTime);
 // 默认分页参数
@@ -219,7 +220,7 @@ const HomePage: React.FC = () => {
               hoverable
               cover={
                 <Image
-                  src={item.picture}
+                  src={COS_HOST + item.picture}
                   alt={item.name}
                   preview={false}
                   style={{ height: '250px', objectFit: 'cover' }}
@@ -247,7 +248,7 @@ const HomePage: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-zinc-500">{dayjs(item.createTime).fromNow()}</span>
                 <div>
-                  <Avatar size="small" src={item.user?.userAvatar ?? <UserOutlined />} />
+                  <Avatar size="small" src={COS_HOST + item.user?.userAvatar ?? <UserOutlined />} />
                 </div>
               </div>
             </Card>
