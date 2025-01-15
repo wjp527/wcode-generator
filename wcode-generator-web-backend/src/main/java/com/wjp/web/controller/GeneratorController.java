@@ -21,6 +21,7 @@ import com.wjp.web.exception.ThrowUtils;
 import com.wjp.web.manager.CosManager;
 import com.wjp.maker.meta.Meta;
 import com.wjp.web.model.dto.generator.*;
+import com.wjp.web.model.dto.user.UserMatchRequest;
 import com.wjp.web.model.entity.Generator;
 import com.wjp.web.model.entity.User;
 import com.wjp.web.model.enums.FileUploadBizEnum;
@@ -656,4 +657,20 @@ public class GeneratorController {
     }
 
 
+    /**
+     * 匹配用户
+     * @param userMatchRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/match")
+    public BaseResponse<List<Generator>> matchGenerators(@RequestBody UserMatchRequest userMatchRequest, HttpServletRequest request) {
+        long num = userMatchRequest.getNum();
+        if(num <= 0 || num >= 20) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "页数不对");
+        }
+        User loginUser = userService.getLoginUser(request);
+        List<Generator> userList = generatorService.matchGenerators(num,loginUser);
+        return ResultUtils.success(userList);
+    }
 }

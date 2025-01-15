@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wjp.web.model.dto.generator.GeneratorQueryRequest;
 import com.wjp.web.model.entity.Generator;
+import com.wjp.web.model.entity.User;
 import com.wjp.web.model.vo.GeneratorVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 帖子服务
@@ -51,4 +53,19 @@ public interface GeneratorService extends IService<Generator> {
      * @return
      */
     Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request);
+
+
+
+    /**
+     * 匹配用户
+     * @param num
+     * @param loginUser
+     * @return
+     */
+    List<Generator> matchGenerators(long num, User loginUser);
+    /**
+     * 获取当前用户(脱敏信息)
+     * @param originGenerator
+     */
+    Generator getSafetyGenerator(Generator originGenerator);
 }
