@@ -1,0 +1,76 @@
+{
+    "name": "acm-template-generator",
+    "description": "ACM 示例模板生成器",
+    "fileConfig": {
+        "sourceRootPath": "D:/fullStack/wcode-generator/wcode-generator-demo-projects/acm-template",
+        "files": [
+            {
+                "type": "group",
+                "condition": "needGit",
+                "groupKey": "git",
+                "groupName": "开源",
+                "files": [
+                    {
+                        "inputPath": ".gitignore",
+                        "outputPath": ".gitignore",
+                        "type": "file",
+                        "generateType": "static"
+                    },
+                    {
+                        "inputPath": "README.md",
+                        "outputPath": "README.md",
+                        "type": "file",
+                        "generateType": "static"
+                    }
+                ]
+            },
+            {
+                "inputPath": "src/com/wjp/acm/MainTemplate.java.ftl",
+                "outputPath": "src/com/wjp/acm/MainTemplate.java",
+                "type": "file",
+                "generateType": "dynamic"
+            }
+        ] 
+    },
+    "modelConfig": {
+    "models": [
+        {
+            "fieldName": "needGit",
+            "type": "boolean",
+            "description": "是否生成 .gitignore 文件",
+            "defaultValue": true,
+            "abbr": "ng"
+        },
+        {
+            "fieldName": "loop",
+            "type": "boolean",
+            "description": "是否生成循环",
+            "defaultValue": false,
+            "abbr": "l"
+        },
+        {
+            "type": "MainTemplate",
+            "description": "用于生成核心模板文件",
+            "groupKey": "mainTemplate",
+            "groupName": "核心模板",
+            "condition": "loop",
+            "models": [
+                {
+                    "fieldName": "author",
+                    "type": "String",
+                    "description": "作者注释",
+                    "defaultValue": "wjp",
+                    "abbr": "a"
+                },
+                {
+                    "fieldName": "outputText",
+                    "type": "String",
+                    "description": "输出信息",
+                    "defaultValue": "sum:",
+                    "abbr": "o"
+                }
+            ]
+        }
+    ]
+}
+}

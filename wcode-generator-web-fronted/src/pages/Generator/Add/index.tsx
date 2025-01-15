@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from 'react';
 import ModelConfigForm from './components/ModelConfigForm';
 import FilelConfigForm from './components/FilelConfigForm';
 import GeneratorMaker from './components/GeneratorMaker';
-import {  FileAddOutlined, UploadOutlined } from '@ant-design/icons';
+import { FileAddOutlined, UploadOutlined } from '@ant-design/icons';
 // 节流
 import { throttle } from 'lodash';
 /**
@@ -147,6 +147,9 @@ const GeneratorAddPage: React.FC = () => {
     } else {
       doUpdate(id, values);
     }
+    localStorage.removeItem('basicInfo');
+    localStorage.removeItem('modelConfig');
+    localStorage.removeItem('fileConfig');
   };
 
   // 使用节流函数，确保每3秒钟只请求一次
@@ -218,7 +221,6 @@ const GeneratorAddPage: React.FC = () => {
     commandSave('fileConfig');
   };
 
- 
   // 子组件的 onChange 回调函数
   const handleFileChange = (newFileList: any[]) => {
     setFileList(newFileList); // 更新父组件的状态
@@ -349,7 +351,7 @@ const GeneratorAddPage: React.FC = () => {
                       <FileAddOutlined />
                       保存为草稿
                     </Button>
-                  </div> 
+                  </div>
                   <div>
                     <Button
                       htmlType="button"

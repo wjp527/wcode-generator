@@ -8,8 +8,17 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, message, Select, Space, Tag, Typography } from 'antd';
+import { Button, message, Modal, Select, Space, Tag, Tooltip, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
+
+// 默认分页参数
+const DEFAULT_PAGE_PARAMS = {
+  current: 1,
+  pageSize: 12,
+  searchText: '',
+  sortField: 'createTime',
+  sortOrder: 'descend',
+};
 
 /**
  * 代码生成器管理页面
@@ -24,6 +33,29 @@ const GeneratorAdminPage: React.FC = () => {
   const actionRef = useRef<ActionType>();
   // 当前代码生成器点击的数据
   const [currentRow, setCurrentRow] = useState<API.Generator>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [type, setType] = useState<'file' | 'model'>('file');
+  const [selectConfig, setSelectConfig] = useState<API.Generator>();
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  // 查看文件配置
+  const lookConfig = (record: API.Generator, type: 'file' | 'model') => {
+    showModal();
+    setType(type);
+    if (type === 'file') {
+      setSelectConfig(JSON.parse(record.fileConfig || '{}'));
+    } else {
+      setSelectConfig(JSON.parse(record.modelConfig || '{}'));
+    }
+  };
 
   /**
    * 删除节点
@@ -118,24 +150,61 @@ const GeneratorAdminPage: React.FC = () => {
     {
       title: '文件配置',
       dataIndex: 'fileConfig',
-      valueType: 'jsonCode',
+      render: (_, record) => {
+        // 转为tag标签
+        return (
+          <Button size="small" onClick={() => lookConfig(record, 'file')}>
+            文件配置
+          </Button>
+        );
+      },
     },
     {
       title: '模型配置',
       dataIndex: 'modelConfig',
-      valueType: 'jsonCode',
+      render: (_, record) => {
+        // 转为tag标签
+        return (
+          <Button size="small" onClick={() => lookConfig(record, 'model')}>
+            模型配置
+          </Button>
+        );
+      },
     },
     {
       title: '产物包路径',
       dataIndex: 'distPath',
       valueType: 'text',
+      // 超过10个字符就显示省略号
+      render: (_, record: any) => {
+        return (
+          <Tooltip title={record.distPath}>
+            {record.distPath?.length > 10 ? record.distPath?.slice(0, 10) + '...' : record.distPath}
+          </Tooltip>
+        );
+      },
     },
     {
       title: '状态',
       dataIndex: 'status',
       valueEnum: {
         0: {
-          text: '默认',
+          text: '未开始',
+        },
+        1: {
+          text: '制作中',
+        },
+        2: {
+          text: '打包中',
+        },
+        3: {
+          text: '审核中',
+        },
+        4: {
+          text: '已发布',
+        },
+        5: {
+          text: '已下架',
         },
       },
     },
@@ -143,6 +212,13 @@ const GeneratorAdminPage: React.FC = () => {
       title: '创建用户',
       dataIndex: 'userId',
       valueType: 'text',
+      render: (_, record: any) => {
+        return (
+          <Tooltip title={record.userId}>
+            {record.userId?.length > 10 ? record.userId?.slice(0, 10) + '...' : record.userId}
+          </Tooltip>
+        );
+      },
     },
     {
       title: '创建时间',
@@ -220,6 +296,9 @@ const GeneratorAdminPage: React.FC = () => {
             total: Number(data?.total) || 0,
           };
         }}
+        pagination={{
+          pageSize: DEFAULT_PAGE_PARAMS.pageSize,
+        }}
         columns={columns}
       />
       <CreateModal
@@ -246,6 +325,15 @@ const GeneratorAdminPage: React.FC = () => {
           setUpdateModalVisible(false);
         }}
       />
+
+      <Modal
+        title={type === 'file' ? '文件配置' : '模型配置'}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <pre>{JSON.stringify(selectConfig, null, 2)}</pre>
+      </Modal>
     </div>
   );
 };
