@@ -137,7 +137,11 @@ const GeneratorDetailPage: React.FC = () => {
 
   return (
     <PageContainer title={<></>} loading={loading}>
-      <Alert message="未登录，不允许使用" type="warning" closable className="mb-4" />
+      {currentUser?.id ? (
+        <></>
+      ) : (
+        <Alert message="未登录，不允许使用" type="warning" closable className="mb-4" />
+      )}
       {data && (
         <Card>
           <Row justify="space-between" gutter={[32, 32]}>
