@@ -17,13 +17,13 @@ import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
-import { history, useSearchParams } from '@umijs/max';
+import { history, useModel, useSearchParams } from '@umijs/max';
 import { Alert, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import ModelConfigForm from './components/ModelConfigForm';
 import FilelConfigForm from './components/FilelConfigForm';
 import GeneratorMaker from './components/GeneratorMaker';
-import {  FileAddOutlined, UploadOutlined } from '@ant-design/icons';
+import { FileAddOutlined, UploadOutlined } from '@ant-design/icons';
 // 节流
 import { throttle } from 'lodash';
 /**
@@ -31,6 +31,8 @@ import { throttle } from 'lodash';
  * @returns
  */
 const GeneratorAddPage: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState ?? {};
   const formRef = useRef<ProFormInstance>();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
@@ -81,6 +83,10 @@ const GeneratorAddPage: React.FC = () => {
    * 加载数据
    */
   useEffect(() => {
+    if (!currentUser?.id) {
+      history.push('/user/login');
+      return;
+    }
     if (!id) return;
     loadData();
   }, [id]);
@@ -218,7 +224,6 @@ const GeneratorAddPage: React.FC = () => {
     commandSave('fileConfig');
   };
 
- 
   // 子组件的 onChange 回调函数
   const handleFileChange = (newFileList: any[]) => {
     setFileList(newFileList); // 更新父组件的状态
@@ -349,7 +354,7 @@ const GeneratorAddPage: React.FC = () => {
                       <FileAddOutlined />
                       保存为草稿
                     </Button>
-                  </div> 
+                  </div>
                   <div>
                     <Button
                       htmlType="button"

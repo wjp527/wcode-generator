@@ -42,6 +42,11 @@ export default [
       },
     ],
   },
+  {
+    path: '/account/center', icon: 'user', component: './User/Center',
+    hideInMenu: true,
+    name: '个人中心'
+  },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];

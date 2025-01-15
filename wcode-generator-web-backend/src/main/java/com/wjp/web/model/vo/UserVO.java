@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户视图（脱敏）
@@ -33,6 +34,12 @@ public class UserVO implements Serializable {
      * 用户简介
      */
     private String userProfile;
+
+    /**
+     * 用户标签
+     */
+    private List<String> tags;
+
 
     /**
      * 用户角色：user/admin/ban
