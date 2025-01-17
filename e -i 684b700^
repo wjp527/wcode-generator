@@ -1,0 +1,78 @@
+[33m15184f3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mwcode-generator-final[m[33m)[m feat: 更新
+[33m684b700[m feat: 最终成品
+[33mb5fa04b[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m Merge branch 'wcode-generator-optimize'
+[33m29f3899[m[33m ([m[1;31morigin/wcode-generator-optimize[m[33m, [m[1;32mwcode-generator-optimize[m[33m)[m feat: 修复bug
+[33m70c8347[m Merge branch 'wcode-generator-optimize'
+[33m345a366[m feat: 修复图片bug
+[33mfdfc93d[m feat: 覆盖冲突
+[33m8534c3a[m feat: 修复bug
+[33m7569344[m feat: 修复
+[33mabfddc1[m feat: 修复
+[33m2e1611d[m feat: 修复bug
+[33m80c4d48[m feat(add): 新增心动模式(编辑距离算法)
+[33mc2d7aee[m feat: 完成项目的存储优化【文件的清理机制 + 任务调度XXL-JOB】
+[33m47a7b29[m feat: 初识xxl-job
+[33mb38e6f4[m feat(md): 完成存储优化笔记
+[33ma6c85a6[m feat(md): 更新性能优化笔记
+[33m72fea53[m feat(md): 更新性能优化笔记
+[33m653c7a2[m feat: 完成项目的性能优化
+[33me03002c[m feat(md): 补充MQ笔记
+[33m239d4f5[m feat: 实现make接口的异步化操作[RabbitMQ]
+[33ma6d9c79[m feat: 性能优化【热key本地存储】
+[33m816a633[m Merge branch 'wcode-generator-cloud'
+[33mc9da654[m feat: 完成模型配置和文件配置的导入功能和简要的异常处理
+[33m1b058a0[m Merge branch 'wcode-generator-cloud'
+[33mf1a8aa2[m feat: 理清代码生成器平台
+[33m2950fd2[m Merge branch 'wcode-generator-cloud'
+[33md42fcb7[m 基本完成在线代码生成器平台的开发
+[33m16a5ab3[m Merge branch 'Merge branch 'main' of github.com:wjp527/wcode-generatormMerge branch 'main' of github.com:wjp527/wcode-generatorain' of github.com:wjp527/wcode-generator Merge branch 'main' of github.com:wjp527/wcode-generator# the commit.
+[33mb3d1527[m feat(bug): 修复保存为草稿
+[33m8e64dda[m 更新01-代码生成器在线使用流程.drawio
+[33m933495d[m 更新01-代码生成器在线使用流程.drawio
+[33m9d383c5[m 已添加 01-代码生成器在线使用流程.drawio
+[33mfc3ff61[m feat: 完善Cos文件上传下载的注释补充 + 创建生成器页面新增保存草稿的功能
+[33m6d86bbe[m feat: 在线代码生成器的完成
+[33m7776020[m feat: 前端模型配置功能页面
+[33m9ddb3e9[m feat: 后端下载cos中的文件，并通过前端的配置进行动态修改cos文件的代码，经过执行脚本后并压缩，最终返回给前端【最后要将文件从本地服务器删除】
+[33m48d080a[m feat: 生成器共享(通用的文件上传组件/代码详情页)
+[33m80d2d9e[m 提交
+[33m14b5a6a[m 提交
+[33m33edf00[m 提交
+[33m9c4d64b[m[33m ([m[1;32mwcode-generator-cloud-new[m[33m)[m 提交
+[33mb785239[m feat: update.
+[33m5630005[m feat: update
+[33mbbaf0e3[m feat: 提交
+[33me83f798[m feat: 提交
+[33mbca9471[m 提交
+[33ma6fe2e4[m feat: 提交
+[33m3278116[m feat: update
+[33mc3ade8a[m feat: update
+[33m202318c[m feat: update
+[33mf51f09e[m feat(add): local.yml
+[33mfc985c3[m update
+[33mb1bd90b[m feat: 加密操作
+[33meb7f418[m 完成COS基本的文件上传+下载(前后端-不过还有些安全问题，后续会有解决)
+[33mfe9f74d[m 完成主页的开发
+[33mdbc3bed[m feat: 完成代码生成器管理页面的开发
+[33m09c5c9a[m feat: 初始化前端模板
+[33mba05d9e[m feat: 完成后端代码生成器功能的开发(基本的增上改查)
+[33m565ca11[m feat: 创建后端模版
+[33md8871c3[m[33m ([m[1;32mwcode-generator-maker[m[33m)[m feat: 模板項目生成
+[33m09fee2f[m feat: 参数封装-易用性优化
+[33mcf90928[m feat: bug解决
+[33m7bfb5dc[m feat: 完成模型分组
+[33m268a7a8[m feat: 完成文件分组
+[33mfcee26e[m feat: 文件过滤【现在文件是自动挖坑+生成】
+[33me3eae62[m feat: 支持输入多个文件，进行自动生成动态/静态文件，实现自动挖坑(不过还是需要用户手动输入路径)
+[33m1736a15[m feat: 进一步对制作工具的配置能力增强(元信息+FreeMarker)
+[33m97eeacc[m feat: 初步完成-开发代码生成器制作工具
+[33mc1180df[m feat(maker): 完成项目的初始化
+[33m5bce87b[m feat(maker): update
+[33me2b4796[m feat(maker): 开发代码生成器制作工具项目 init
+[33m7f57032[m[33m ([m[1;32mwcode-generator-basic[m[33m)[m feat(basic): 完成命令行开发
+[33m46a4c45[m feat(mode): 命令模式的学习
+[33m0d7fab4[m feat(basic): 利用FreeMarker完成静态和动态模板的生成
+[33mcba991f[m feat(md): update
+[33mc6fa081[m feat(md): update
+[33m3a675e0[m feat(md): update
+[33mfbeaaf9[m feat(init): init
