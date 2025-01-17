@@ -150,8 +150,8 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
     @Override
     public GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request) {
         String picture = generator.getPicture();
-        // 去掉 picture 中 https://wcoder-1308962059.cos.ap-shanghai.myqcloud.com(FileConstant.COS_HOST) 这部分
-        // 防止小人知道web服务器的地址，直接暴力访问，导致我的钱包空空如也
+//         去掉 picture 中 https://wcoder-1308962059.cos.ap-shanghai.myqcloud.com(FileConstant.COS_HOST) 这部分
+//         防止小人知道web服务器的地址，直接暴力访问，导致我的钱包空空如也
         picture = picture.substring(picture.indexOf(FileConstant.COS_HOST) + FileConstant.COS_HOST.length());
 
         generator.setPicture(picture);
@@ -302,6 +302,12 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         // 遍历 id列表
         for (Long generatorId : generatorIdList) {
             // 获取对应 id用户列表，添加到最终结果
+            String picture = generatorIdGeneratorListMap.get(generatorId).get(0).getPicture();
+            if(picture != null && picture.contains(FileConstant.COS_HOST)){
+                picture = picture.substring(picture.indexOf(FileConstant.COS_HOST) + FileConstant.COS_HOST.length());
+                generatorIdGeneratorListMap.get(generatorId).get(0).setPicture(picture);
+            }
+
             System.out.println("generatorIdGeneratorListMap = " + generatorIdGeneratorListMap.get(generatorId));
             finalGeneratorList.add(generatorIdGeneratorListMap.get(generatorId).get(0));
         }

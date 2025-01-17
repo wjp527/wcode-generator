@@ -546,7 +546,8 @@ public class GeneratorController {
                 .stream()
                 // 进行过滤出 generator.bat 文件
                 .filter(file -> file.isFile()
-                        && "generator.bat".equals(file.getName()))
+//                        && "generator.bat".equals(file.getName()))
+                        && "generator".equals(file.getName()))
                 // 找到第一个文件
                 .findFirst()
                 // 如果找不到，则抛出异常
@@ -562,11 +563,16 @@ public class GeneratorController {
 
         // 5.构造命令
         File scriptDir = scriptFile.getParentFile();
+//        // 注意，如果是 mac / linux 系统，要用 "./generator"
+//        // D:/fullStack/wcode-generator/wcode-generator-web-backend/.temp/use/7/dist/generator.bat
+//        String scriptAbsolutePath = scriptFile.getAbsolutePath().replace("\\", "/");
+//        // 通过自动执行 json-generate 命令，自动将 dataModel.json 文件中的数据，自动生成代码
+//        String[] commands = new String[] {scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
+
+        // 构造命令
         // 注意，如果是 mac / linux 系统，要用 "./generator"
-        // D:/fullStack/wcode-generator/wcode-generator-web-backend/.temp/use/7/dist/generator.bat
-        String scriptAbsolutePath = scriptFile.getAbsolutePath().replace("\\", "/");
-        // 通过自动执行 json-generate 命令，自动将 dataModel.json 文件中的数据，自动生成代码
-        String[] commands = new String[] {scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
+        String scriptAbsolutePath = scriptFile.getAbsolutePath();
+        String[] commands = new String[]{scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
 
         // 这里一定要拆分！
         ProcessBuilder processBuilder = new ProcessBuilder(commands);

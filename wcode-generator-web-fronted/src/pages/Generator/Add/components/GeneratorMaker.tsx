@@ -44,9 +44,9 @@ export default (props: Props) => {
     values.zipFilePath = zipFilePath[0]?.response?.data;
 
     try {
-      // const blob = await makeGeneratorUsingPost(
+      const blob = await makeGeneratorUsingPost(
         // 异步化
-        const blob = await makeAsyncGeneratorUsingPost(
+        // const blob = await makeAsyncGeneratorUsingPost(
         {
           meta,
           zipFilePath: values.zipFilePath,

@@ -12,15 +12,28 @@ const Footer: React.FC = () => {
         background: 'none',
       }}
       copyright={`${currentYear} ${defaultMessage}`}
-      links={[ 
+      links={[
         {
           key: 'github',
           title: (
             <>
-              <GithubOutlined /> wjp源码
+              <GithubOutlined /> wjp
             </>
           ),
           href: 'https://github.com/wjp527',
+          blankTarget: true,
+        },
+        {
+          key: 'github',
+          title: (
+            <>
+              <div>
+                <span>备案号</span>
+                <span>苏ICP备2025155289号-1</span>
+              </div>
+            </>
+          ),
+          href: 'https://beian.miit.gov.cn/',
           blankTarget: true,
         },
       ]}

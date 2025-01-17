@@ -10,7 +10,7 @@ public class JarGenerator {
         // 调用 Process 类 执行 Maven 打包命令
         String winMavenCommand = "mvn.cmd clean package -DskipTests=true";
         String OtherMavenCommand = "mvn clean package -DskipTests=true";
-        String mavenCommand = winMavenCommand;
+        String mavenCommand = OtherMavenCommand;
 
 
         ProcessBuilder processBuilder = new ProcessBuilder(mavenCommand.split(" "));

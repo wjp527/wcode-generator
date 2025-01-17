@@ -48,10 +48,10 @@ server:
   tomcat:
     max-upload-size: 20971520 # 20MB
     max-http-header-size: 8192  # 你可以根据需要调整
-#    threads:
-#      max: 5000 # 最大处理请求的线程数【相当于工作人员】
-#    max-connections: 10000 # 最大连接数【相当于允许用户排队的数量】
-#    accept-count: 1000 # max-connections + accept-count 不能超过服务器的最大连接数，否则会导致连接失败
+  #    threads:
+  #      max: 5000 # 最大处理请求的线程数【相当于工作人员】
+  #    max-connections: 10000 # 最大连接数【相当于允许用户排队的数量】
+  #    accept-count: 1000 # max-connections + accept-count 不能超过服务器的最大连接数，否则会导致连接失败
   servlet:
     context-path: /api
     # cookie 30 天过期
